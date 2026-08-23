@@ -163,5 +163,16 @@
             <a href="https://github.com/dineshjamakhandi024-coder/Satellite-Ai-Earth-Monitoring" target="_blank" class="btn btn-primary">GitHub Online</a>
         </div>
     </div>
+
+    <script>
+        if (window.location.hostname && window.location.hostname !== "") {
+            const port = window.location.port ? `:${window.location.port}` : '';
+            const dynUrl = `${window.location.protocol}//${window.location.hostname}${port}/index.html`;
+            const codeEl = document.getElementById('mobile-url');
+            if (codeEl && window.location.protocol.startsWith('http')) {
+                codeEl.textContent = dynUrl;
+            }
+        }
+    </script>
 </body>
 </html>

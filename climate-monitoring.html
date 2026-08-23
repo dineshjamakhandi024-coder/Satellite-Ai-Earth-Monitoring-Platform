@@ -39,8 +39,10 @@
         </ul>
 
         <div class="nav-actions">
-            <div class="live-status"><span class="live-dot"></span> LIVE TELEMETRY</div>
-            <div class="clock"><i class="fa-solid fa-clock"></i> <span id="climateClock">UTC 00:00:00</span></div>
+            <div class="live-status"><span class="live-dot"></span> LIVE</div>
+            <button type="button" class="mobile-nav-toggle" id="climateMobileNavToggle" aria-label="Toggle Navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </div>
     </header>
 
@@ -563,6 +565,7 @@
     <script src="national-weather.js"></script>
     <script src="climate-monitoring.js"></script>
     <script src="auth.js"></script>
+    <script src="mobile-nav.js"></script>
     <script src="ai-assistant.js"></script>
 </body>
 </html>

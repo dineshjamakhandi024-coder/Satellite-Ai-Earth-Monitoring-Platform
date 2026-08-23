@@ -305,7 +305,7 @@ body {
 /* RADAR & SUMMARY */
 .radar-summary-section {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
     gap: 2rem;
     margin-bottom: 3rem;
 }
@@ -1774,11 +1774,57 @@ footer {
 
 @media (max-width: 900px) {
     .nav-menu { display: none; }
-    .top-nav { padding: 1rem 1.5rem; }
-    .radar-summary-section { grid-template-columns: 1fr; }
+    .top-nav { padding: 0.8rem 1.2rem; }
+    .radar-summary-section { grid-template-columns: 1fr; gap: 1.2rem; }
     .search-form { flex-direction: column; }
     .btn-search-submit { height: 48px; justify-content: center; }
-    .gw-temp-val { font-size: 3.8rem; }
+    .gw-temp-val { font-size: 3.2rem; }
     .gw-temp-right { align-items: flex-start; text-align: left; }
     .gw-current-main { flex-direction: column; align-items: flex-start; }
+    
+    .hero {
+        padding: 2rem 1rem 1.5rem;
+    }
+    .hero h1 {
+        font-size: 1.6rem;
+    }
+    .hero p {
+        font-size: 0.9rem;
+    }
+    .metrics-section, .container {
+        padding: 0 1rem;
+    }
+    .radar-view {
+        height: 280px;
+    }
+    .radar-card, .summary-card {
+        padding: 1.2rem;
+    }
+    .ai-assistant-wrapper {
+        right: 14px;
+        bottom: 14px;
+    }
+    .ai-chat-drawer {
+        right: 8px;
+        bottom: 75px;
+        width: calc(100vw - 16px);
+        max-height: calc(100vh - 90px);
+        height: 520px;
+    }
 }
+
+@media (max-width: 480px) {
+    .top-nav .nav-brand h2 {
+        font-size: 1.1rem;
+    }
+    .top-nav .nav-brand small {
+        display: none;
+    }
+    .metrics-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+    }
+    .gw-temp-val {
+        font-size: 2.5rem;
+    }
+}

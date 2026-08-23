@@ -25,6 +25,7 @@ def get_local_ip():
     return ip
 
 ip = get_local_ip()
+mobile_url = f"http://{ip}:{PORT}"
 qr_dir = PROJECT_DIR / "images"
 qr_dir.mkdir(parents=True, exist_ok=True)
 qr_image_path = qr_dir / "mobile_qr_code.png"

@@ -3480,67 +3480,281 @@ color:#aaa;
 }
 
 /* ============================================================
-   RESPONSIVE ADJUSTMENTS
+   RESPONSIVE ADJUSTMENTS & MOBILE OPTIMIZATIONS
 ============================================================ */
 
-@media(max-width: 640px) {
-    .ai-assistant-wrapper {
-        right: 16px;
-        bottom: 16px;
-    }
-
-    .ai-chat-drawer {
-        right: 10px;
-        bottom: 85px;
-        width: calc(100vw - 20px);
-        height: 600px;
-        max-height: calc(100vh - 100px);
-        border-radius: 18px;
-    }
-
-    .ai-chat-drawer.expanded {
-        width: calc(100vw - 20px);
-    }
-
-    .ai-view-tabs .ai-tab-btn span {
-        display: none;
-    }
-}
-
-@media(max-width: 1100px) {
-    .navbar.cosmic-navbar {
-        flex-wrap: wrap;
-        gap: 12px;
-        justify-content: space-between;
-        padding: 12px 0;
-    }
+@media(max-width: 1024px) {
     .cosmic-nav-links {
-        order: 3;
-        width: 100%;
-        justify-content: center;
-        gap: 8px;
+        display: none !important;
     }
-    .cosmic-nav-pill {
-        padding: 7px 16px;
-        font-size: 11.5px;
+
+    .cosmic-header {
+        padding: 10px 20px;
+    }
+
+    .navbar.cosmic-navbar {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0;
+    }
+
+    .contact-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
     }
 }
 
 @media(max-width: 768px) {
     .cosmic-brand-pill {
-        padding: 8px 18px;
-        font-size: 12.5px;
+        padding: 6px 14px;
+        font-size: 12px;
+        gap: 8px;
     }
-    .cosmic-nav-links {
-        gap: 6px;
+
+    .cosmic-brand-pill i {
+        font-size: 16px;
     }
-    .cosmic-nav-pill {
-        padding: 6px 12px;
-        font-size: 10.5px;
+
+    .cosmic-header {
+        padding: 8px 12px;
     }
-    .cosmic-user-pill {
-        padding: 7px 14px;
-        font-size: 11px;
+
+    .nav-buttons {
+        gap: 8px;
+    }
+
+    .notification-wrapper .notification-btn,
+    .cosmic-user-avatar-btn {
+        width: 38px;
+        height: 38px;
+    }
+
+    /* Notification Panel on Mobile */
+    .notification-panel {
+        position: fixed;
+        top: 65px;
+        left: 12px;
+        right: 12px;
+        width: auto;
+        max-width: 380px;
+        margin: 0 auto;
+        max-height: calc(100vh - 85px);
+        z-index: 10001;
+    }
+
+    /* User Profile Menu on Mobile */
+    .user-profile-menu {
+        position: fixed;
+        top: 65px;
+        right: 12px;
+        left: 12px;
+        width: auto;
+        max-width: 340px;
+        margin: 0 auto;
+        z-index: 10001;
+    }
+
+    /* Hero Section */
+    .hero {
+        padding: 30px 16px 40px;
+        flex-direction: column-reverse;
+        gap: 24px;
+        text-align: center;
+    }
+
+    .hero h1 {
+        font-size: 28px;
+        line-height: 1.25;
+    }
+
+    .hero p {
+        font-size: 14px;
+        line-height: 1.6;
+        margin: 0 auto 20px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .hero-buttons a,
+    .hero-buttons button {
+        width: 100%;
+        justify-content: center;
+        padding: 13px 20px;
+        font-size: 14px;
+    }
+
+    .hero-right img {
+        width: 100%;
+        max-width: 280px;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    /* Features Section */
+    .features {
+        width: 92%;
+        margin: 40px auto;
+    }
+
+    .features h2 {
+        font-size: 24px;
+        margin-bottom: 24px;
+    }
+
+    .feature-cards {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .feature-card {
+        padding: 22px 18px;
+    }
+
+    /* Stats & Telemetry */
+    .stats-container,
+    .telemetry-section {
+        width: 92%;
+        margin: 40px auto;
+        padding: 20px 14px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .stat-box {
+        padding: 16px 12px;
+    }
+
+    .stat-box h3 {
+        font-size: 22px;
+    }
+
+    .stat-box p {
+        font-size: 11.5px;
+    }
+
+    /* Comparison / Multi-spectral Viewer */
+    .comparison-section {
+        width: 92%;
+        margin: 40px auto;
+    }
+
+    .comparison-container {
+        width: 100%;
+        height: 260px;
+    }
+
+    /* Contact Section */
+    .contact-container {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .contact-card {
+        padding: 22px 18px;
+    }
+
+    .contact-card i {
+        font-size: 38px;
+        margin-bottom: 12px;
+    }
+
+    /* Newsletter Form */
+    .newsletter {
+        width: 92%;
+        margin: 40px auto;
+        padding: 28px 16px;
+    }
+
+    .newsletter h2 {
+        font-size: 22px;
+    }
+
+    .newsletter p {
+        font-size: 13.5px;
+        margin-bottom: 20px;
+    }
+
+    .newsletter-box {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .newsletter-box input {
+        width: 100% !important;
+        max-width: 100%;
+        padding: 13px 16px;
+        font-size: 14px;
+    }
+
+    .newsletter-box button {
+        width: 100%;
+        padding: 13px 20px;
+        font-size: 14px;
+    }
+
+    /* Footer */
+    .footer {
+        padding: 40px 16px 30px;
+        margin-top: 50px;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        text-align: left;
+    }
+
+    /* AI Assistant Drawer on Mobile */
+    .ai-assistant-wrapper {
+        right: 14px;
+        bottom: 14px;
+    }
+
+    .ai-chat-drawer {
+        right: 8px;
+        bottom: 75px;
+        width: calc(100vw - 16px);
+        max-height: calc(100vh - 90px);
+        height: 520px;
+        border-radius: 16px;
+    }
+
+    .ai-chat-drawer.expanded {
+        width: calc(100vw - 16px);
     }
 }
+
+@media(max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cosmic-brand-pill span {
+        font-size: 12px;
+    }
+
+    .hero h1 {
+        font-size: 24px;
+    }
+
+    .stat-number {
+        font-size: 26px;
+    }
+}
+
 

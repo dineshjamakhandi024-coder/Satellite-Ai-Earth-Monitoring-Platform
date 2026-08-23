@@ -46,16 +46,15 @@
         <div class="nav-telemetry">
             <div class="telemetry-chip live-chip">
                 <span class="pulse-dot"></span>
-                <span>LEO SATELLITE FLEET: <strong>24 ACTIVE</strong></span>
-            </div>
-            <div class="telemetry-chip">
-                <i class="fa-solid fa-clock"></i>
-                <span id="utcClock" class="font-mono">UTC 00:00:00</span>
+                <span>LEO FLEET: <strong>24 ACTIVE</strong></span>
             </div>
             <a href="index.html" class="btn-nav-portal" title="Public Planetary Portal">
                 <i class="fa-solid fa-globe"></i>
-                <span>Public Portal</span>
+                <span>Home</span>
             </a>
+            <button type="button" class="mobile-nav-toggle" id="loginMobileNavToggle" aria-label="Toggle Navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </div>
     </header>
 
@@ -430,6 +429,7 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- Scripts -->
+    <script src="mobile-nav.js"></script>
     <script src="login.js"></script>
 </body>
 

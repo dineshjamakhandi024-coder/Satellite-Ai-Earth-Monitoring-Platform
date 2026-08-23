@@ -52,16 +52,15 @@
         <div class="nav-telemetry">
             <div class="telemetry-chip live">
                 <span class="live-dot"></span>
-                <span>LIVE TELEMETRY</span>
+                <span>LIVE</span>
             </div>
             <div class="telemetry-chip">
                 <i class="fa-solid fa-clock" style="color:var(--accent-cyan)"></i>
                 <span id="utcClock">UTC 00:00:00</span>
             </div>
-            <div class="telemetry-chip">
-                <i class="fa-solid fa-cloud-sun" style="color:var(--accent-cyan)"></i>
-                <span><b id="dispCountryCount">30+</b> Nations Active</span>
-            </div>
+            <button type="button" class="mobile-nav-toggle" id="earthMobileNavToggle" aria-label="Toggle Navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
         </div>
     </header>
 
@@ -392,6 +391,7 @@
     <!-- 3D Earth Engine, Weather & AI Assistant Scripts -->
     <script src="national-weather.js"></script>
     <script src="earth-3d.js"></script>
+    <script src="mobile-nav.js"></script>
     <script src="ai-assistant.js"></script>
     <script src="auth.js"></script>
 </body>

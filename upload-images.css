@@ -437,14 +437,27 @@ body::before {
 @media (max-width: 900px) {
     .container {
         grid-template-columns: 1fr;
+        padding: 0 1rem;
+    }
+
+    .top-nav {
+        padding: 0.8rem 1.2rem;
     }
 
     .nav-menu {
         display: none;
     }
 
+    .hero {
+        padding: 2.5rem 1rem 1.8rem;
+    }
+
     .hero-content h1 {
-        font-size: 28px;
+        font-size: 1.6rem;
+    }
+
+    .hero-content p {
+        font-size: 0.9rem;
     }
 
     .dispatch-buttons {
@@ -455,4 +468,24 @@ body::before {
         width: 100%;
         justify-content: center;
     }
+
+    .ai-assistant-wrapper {
+        right: 14px;
+        bottom: 14px;
+    }
+
+    .ai-chat-drawer {
+        right: 8px;
+        bottom: 75px;
+        width: calc(100vw - 16px);
+        max-height: calc(100vh - 90px);
+        height: 520px;
+    }
 }
+
+@media (max-width: 480px) {
+    .top-nav .nav-brand h2 { font-size: 1.1rem; }
+    .top-nav .nav-brand small { display: none; }
+    .nav-actions .user-pill { display: none; }
+    .dropzone-box { min-height: 180px; }
+}

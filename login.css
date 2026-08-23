@@ -1344,11 +1344,30 @@ body {
 
 @media (max-width: 640px) {
     .top-nav {
-        padding: 14px 18px;
+        padding: 10px 14px;
+        height: 56px;
     }
 
-    .nav-telemetry .telemetry-chip {
+    .nav-brand .brand-info small {
         display: none;
+    }
+
+    .nav-brand .brand-info h1 {
+        font-size: 14px;
+    }
+
+    .nav-telemetry .live-chip {
+        display: none;
+    }
+
+    .btn-nav-portal {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+
+    .login-wrapper {
+        padding: 16px 12px;
+        gap: 20px;
     }
 
     .form-dual-grid {
@@ -1360,17 +1379,21 @@ body {
     }
 
     .auth-glass-card {
-        padding: 24px 18px;
+        padding: 20px 14px;
     }
 
     .hero-title {
-        font-size: 26px;
+        font-size: 22px;
+    }
+
+    .hero-desc {
+        font-size: 13px;
     }
 
     .bottom-bar {
         flex-direction: column;
         gap: 8px;
         text-align: center;
-        padding: 14px;
+        padding: 14px 10px;
     }
 }
