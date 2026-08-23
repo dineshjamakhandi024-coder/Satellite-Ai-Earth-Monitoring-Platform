@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Upload Satellite Images | Satellite AI</title>
+
+    <link rel="stylesheet" href="upload.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header class="hero">
+
+    <div class="overlay"></div>
+
+    <div class="hero-content">
+
+        <h1>
+            <i class="fa-solid fa-satellite"></i>
+            Satellite Image Upload
+        </h1>
+
+        <p>
+            Upload two satellite images captured at different
+            times for AI-powered comparison.
+        </p>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
+<section class="container">
+
+
+    <h2>
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+        Upload Images
+    </h2>
+
+
+    <p class="description">
+        Select a before image and an after image to analyze
+        changes using Satellite AI.
+    </p>
+
+
+
+    <!-- =================================================
+         IMAGE UPLOAD CARDS
+    ================================================== -->
+
+    <div class="upload-container">
+
+
+        <!-- ================= BEFORE IMAGE ================= -->
+
+        <div class="card">
+
+            <div class="icon">
+
+                <i class="fa-solid fa-image"></i>
+
+            </div>
+
+
+            <h3>
+                Before Image
+            </h3>
+
+
+            <p class="image-info">
+                Satellite image captured earlier
+            </p>
+
+
+            <img
+                id="beforePreview"
+                src="https://placehold.co/350x220?text=Before+Image"
+                alt="Before Image"
+            >
+
+
+            <label class="upload-btn">
+
+                <i class="fa-solid fa-upload"></i>
+
+                Choose Before Image
+
+
+                <input
+                    type="file"
+                    id="beforeInput"
+                    accept="image/*"
+                    hidden
+                >
+
+            </label>
+
+
+            <p
+                id="beforeFileName"
+                class="file-name">
+
+                No image selected
+
+            </p>
+
+        </div>
+
+
+
+        <!-- ================= AFTER IMAGE ================= -->
+
+        <div class="card">
+
+            <div class="icon">
+
+                <i class="fa-solid fa-image"></i>
+
+            </div>
+
+
+            <h3>
+                After Image
+            </h3>
+
+
+            <p class="image-info">
+                Recent satellite image
+            </p>
+
+
+            <img
+                id="afterPreview"
+                src="https://placehold.co/350x220?text=After+Image"
+                alt="After Image"
+            >
+
+
+            <label class="upload-btn">
+
+                <i class="fa-solid fa-upload"></i>
+
+                Choose After Image
+
+
+                <input
+                    type="file"
+                    id="afterInput"
+                    accept="image/*"
+                    hidden
+                >
+
+            </label>
+
+
+            <p
+                id="afterFileName"
+                class="file-name">
+
+                No image selected
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         COMPARE BUTTON
+    ================================================== -->
+
+    <div class="compare-section">
+
+
+        <button
+            type="button"
+            class="compare-btn"
+            id="compareBtn">
+
+            <i class="fa-solid fa-code-compare"></i>
+
+            Compare Images
+
+        </button>
+
+
+        <p
+            id="uploadStatus"
+            class="upload-status">
+        </p>
+
+
+    </div>
+
+
+
+    <!-- =================================================
+         RESULT BOX
+    ================================================== -->
+
+    <div
+        id="resultBox"
+        class="result-box"
+        style="display: none;">
+
+        <div class="result-icon">
+
+            <i class="fa-solid fa-chart-column"></i>
+
+        </div>
+
+
+        <h3>
+            AI Analysis Results
+        </h3>
+
+
+
+        <div class="result-content">
+
+
+            <!-- FOREST LOSS -->
+
+            <div class="result-item">
+
+                <i class="fa-solid fa-tree"></i>
+
+                <div>
+
+                    <span>
+                        Forest Loss
+                    </span>
+
+                    <strong id="forestLoss">
+                        --%
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- URBAN GROWTH -->
+
+            <div class="result-item">
+
+                <i class="fa-solid fa-city"></i>
+
+                <div>
+
+                    <span>
+                        Urban Growth
+                    </span>
+
+                    <strong id="urbanGrowth">
+                        --%
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- OVERALL CHANGE -->
+
+            <div class="result-item">
+
+                <i class="fa-solid fa-chart-line"></i>
+
+                <div>
+
+                    <span>
+                        Overall Change
+                    </span>
+
+                    <strong id="overallChange">
+                        --%
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <p id="resultMessage">
+
+            Images compared successfully.
+
+        </p>
+
+
+    </div>
+
+
+</section>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script>
+
+
+/* =====================================================
+   GET ELEMENTS
+===================================================== */
+
+
+const beforeInput =
+    document.getElementById("beforeInput");
+
+
+const afterInput =
+    document.getElementById("afterInput");
+
+
+const beforePreview =
+    document.getElementById("beforePreview");
+
+
+const afterPreview =
+    document.getElementById("afterPreview");
+
+
+const beforeFileName =
+    document.getElementById("beforeFileName");
+
+
+const afterFileName =
+    document.getElementById("afterFileName");
+
+
+const compareBtn =
+    document.getElementById("compareBtn");
+
+
+const uploadStatus =
+    document.getElementById("uploadStatus");
+
+
+const resultBox =
+    document.getElementById("resultBox");
+
+
+const forestLoss =
+    document.getElementById("forestLoss");
+
+
+const urbanGrowth =
+    document.getElementById("urbanGrowth");
+
+
+const overallChange =
+    document.getElementById("overallChange");
+
+
+const resultMessage =
+    document.getElementById("resultMessage");
+
+
+
+/* =====================================================
+   BEFORE IMAGE PREVIEW
+===================================================== */
+
+
+beforeInput.addEventListener("change", function () {
+
+    const file = this.files[0];
+
+
+    if (!file) {
+
+        return;
+
+    }
+
+
+    if (!file.type.startsWith("image/")) {
+
+        alert(
+            "Please select a valid image."
+        );
+
+        this.value = "";
+
+        return;
+
+    }
+
+
+    beforePreview.src =
+        URL.createObjectURL(file);
+
+
+    beforeFileName.textContent =
+        file.name;
+
+});
+
+
+
+/* =====================================================
+   AFTER IMAGE PREVIEW
+===================================================== */
+
+
+afterInput.addEventListener("change", function () {
+
+    const file = this.files[0];
+
+
+    if (!file) {
+
+        return;
+
+    }
+
+
+    if (!file.type.startsWith("image/")) {
+
+        alert(
+            "Please select a valid image."
+        );
+
+        this.value = "";
+
+        return;
+
+    }
+
+
+    afterPreview.src =
+        URL.createObjectURL(file);
+
+
+    afterFileName.textContent =
+        file.name;
+
+});
+
+
+
+/* =====================================================
+   COMPARE IMAGES
+===================================================== */
+
+
+compareBtn.addEventListener("click", async function (event) {
+
+
+    /*
+       VERY IMPORTANT
+
+       Prevent browser from refreshing page.
+    */
+
+    event.preventDefault();
+
+    event.stopPropagation();
+
+
+
+    /* =================================================
+       GET FILES
+    ================================================= */
+
+
+    const beforeFile =
+        beforeInput.files[0];
+
+
+    const afterFile =
+        afterInput.files[0];
+
+
+
+    /* =================================================
+       CHECK BEFORE IMAGE
+    ================================================= */
+
+
+    if (!beforeFile) {
+
+        alert(
+            "Please select the Before Image first."
+        );
+
+        return;
+
+    }
+
+
+
+    /* =================================================
+       CHECK AFTER IMAGE
+    ================================================= */
+
+
+    if (!afterFile) {
+
+        alert(
+            "Please select the After Image first."
+        );
+
+        return;
+
+    }
+
+
+
+    /* =================================================
+       FORM DATA
+    ================================================= */
+
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "before_image",
+        beforeFile
+    );
+
+
+    formData.append(
+        "after_image",
+        afterFile
+    );
+
+
+
+    /* =================================================
+       LOADING
+    ================================================= */
+
+
+    compareBtn.disabled = true;
+
+
+    compareBtn.innerHTML =
+        '<i class="fa-solid fa-spinner fa-spin"></i> Comparing...';
+
+
+    uploadStatus.textContent =
+        "Uploading and comparing satellite images...";
+
+
+
+    /* =================================================
+       SEND TO FASTAPI
+    ================================================= */
+
+
+    try {
+
+
+        const response =
+            await fetch(
+                "http://127.0.0.1:8000/upload-images",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+
+
+        /* =================================================
+           READ RESPONSE
+        ================================================= */
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "FastAPI Response:",
+            data
+        );
+
+
+
+        /* =================================================
+           SUCCESS
+        ================================================= */
+
+
+        if (
+            response.ok &&
+            data.success === true
+        ) {
+
+
+            /* =============================================
+               SHOW RESULT BOX
+            ============================================= */
+
+
+            resultBox.style.display =
+                "block";
+
+
+            resultBox.style.visibility =
+                "visible";
+
+
+            resultBox.style.opacity =
+                "1";
+
+
+
+            /* =============================================
+               SHOW FOREST LOSS
+            ============================================= */
+
+
+            if (
+                data.forest_loss !== undefined
+            ) {
+
+                forestLoss.textContent =
+                    data.forest_loss + "%";
+
+            }
+
+            else {
+
+                forestLoss.textContent =
+                    "--%";
+
+            }
+
+
+
+            /* =============================================
+               SHOW URBAN GROWTH
+            ============================================= */
+
+
+            if (
+                data.urban_growth !== undefined
+            ) {
+
+                urbanGrowth.textContent =
+                    data.urban_growth + "%";
+
+            }
+
+            else {
+
+                urbanGrowth.textContent =
+                    "--%";
+
+            }
+
+
+
+            /* =============================================
+               SHOW OVERALL CHANGE
+            ============================================= */
+
+
+            if (
+                data.overall_change !== undefined
+            ) {
+
+                overallChange.textContent =
+                    data.overall_change + "%";
+
+            }
+
+            else {
+
+                overallChange.textContent =
+                    "--%";
+
+            }
+
+
+
+            /* =============================================
+               MESSAGE
+            ============================================= */
+
+
+            resultMessage.textContent =
+                data.message ||
+                "Images compared successfully.";
+
+
+            uploadStatus.textContent =
+                "Comparison completed successfully!";
+
+
+
+            /* =============================================
+               BUTTON
+            ============================================= */
+
+
+            compareBtn.disabled =
+                false;
+
+
+            compareBtn.innerHTML =
+                '<i class="fa-solid fa-check"></i> Comparison Complete';
+
+
+
+            /* =============================================
+               SCROLL TO RESULT
+            ============================================= */
+
+
+            resultBox.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+
+        }
+
+
+
+        /* =================================================
+           SERVER ERROR
+        ================================================= */
+
+
+        else {
+
+
+            uploadStatus.textContent =
+                "Comparison failed.";
+
+
+            alert(
+                data.message ||
+                "Image comparison failed."
+            );
+
+
+            compareBtn.disabled =
+                false;
+
+
+            compareBtn.innerHTML =
+                '<i class="fa-solid fa-code-compare"></i> Compare Images';
+
+        }
+
+
+    }
+
+
+
+    /* =====================================================
+       CONNECTION ERROR
+    ===================================================== */
+
+
+    catch (error) {
+
+
+        console.error(
+            "FastAPI connection error:",
+            error
+        );
+
+
+        uploadStatus.textContent =
+            "Backend connection failed.";
+
+
+        alert(
+            "Cannot connect to Satellite AI backend.\n\n" +
+            "Make sure Uvicorn is running."
+        );
+
+
+        compareBtn.disabled =
+            false;
+
+
+        compareBtn.innerHTML =
+            '<i class="fa-solid fa-code-compare"></i> Compare Images';
+
+    }
+
+
+});
+
+
+</script>
+
+
+
+<!-- =====================================================
+     LOGIN PROTECTION
+===================================================== -->
+
+
+
+
+</body>
+
+</html>

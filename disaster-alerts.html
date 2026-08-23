@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite AI | Global Disaster Alerts & Emergency Response</title>
+
+    <link rel="stylesheet" href="disaster-alerts.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <header class="top-nav">
+        <div class="nav-brand">
+            <a href="index.html" class="brand-link">
+                <i class="fa-solid fa-satellite"></i>
+                <div>
+                    <h2>Satellite AI</h2>
+                    <small>Disaster Alerts & Emergency Operations</small>
+                </div>
+            </a>
+        </div>
+
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a href="earth.html"><i class="fa-solid fa-globe"></i> 3D Earth</a></li>
+            <li><a href="change-detection.html"><i class="fa-solid fa-arrows-rotate"></i> Change Detection</a></li>
+            <li><a href="urban-growth.html"><i class="fa-solid fa-city"></i> Urban Growth</a></li>
+            <li><a href="forest-monitoring.html"><i class="fa-solid fa-tree"></i> Forest</a></li>
+            <li><a href="flood-analysis.html"><i class="fa-solid fa-water"></i> Flood</a></li>
+            <li><a href="climate-monitoring.html"><i class="fa-solid fa-cloud-sun"></i> Climate</a></li>
+            <li><a href="disaster-alerts.html" class="active"><i class="fa-solid fa-triangle-exclamation"></i> Alerts</a></li>
+            <li><a href="reports.html"><i class="fa-solid fa-file-lines"></i> Reports</a></li>
+            <li><a href="dashboard.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <div class="live-status"><span class="live-dot"></span> CRITICAL MONITORING</div>
+            <div class="clock"><i class="fa-solid fa-clock"></i> <span id="disasterClock">UTC 00:00:00</span></div>
+        </div>
+    </header>
+
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+        <span class="badge"><i class="fa-solid fa-bell"></i> 24/7 Global Satellite Early Warning System</span>
+        <h1>🚨 Planetary Disaster Alerts & Crisis Command</h1>
+        <p>
+            Autonomous orbital detection of earthquakes, catastrophic floods, wildfires, cyclones, and land movement with rapid emergency dispatch protocols.
+        </p>
+    </section>
+
+    <!-- ================= MAIN CONTAINER ================= -->
+    <main class="container">
+
+        <!-- STATS CARDS -->
+        <section class="stats-grid">
+            <div class="card stat-critical">
+                <i class="fas fa-triangle-exclamation"></i>
+                <h2 id="cntActiveAlerts">5</h2>
+                <p>Active Critical Incidents</p>
+            </div>
+
+            <div class="card">
+                <i class="fas fa-earth-americas"></i>
+                <h2>195</h2>
+                <p>Nations Monitored</p>
+            </div>
+
+            <div class="card">
+                <i class="fas fa-satellite"></i>
+                <h2>18</h2>
+                <p>Orbiters Dedicated</p>
+            </div>
+
+            <div class="card stat-good">
+                <i class="fas fa-shield-heart"></i>
+                <h2>99.9%</h2>
+                <p>Telemetry Uptime</p>
+            </div>
+        </section>
+
+        <!-- CATEGORY FILTERS -->
+        <div class="filter-bar">
+            <span><i class="fa-solid fa-filter"></i> Incident Category Filter:</span>
+            <div class="filter-buttons">
+                <button type="button" class="filter-btn active" onclick="filterDisasters('all')">
+                    All Incidents
+                </button>
+                <button type="button" class="filter-btn" onclick="filterDisasters('earthquake')">
+                    <i class="fas fa-house-crack"></i> Earthquakes
+                </button>
+                <button type="button" class="filter-btn" onclick="filterDisasters('flood')">
+                    <i class="fas fa-water"></i> Floods
+                </button>
+                <button type="button" class="filter-btn" onclick="filterDisasters('fire')">
+                    <i class="fas fa-fire"></i> Wildfires
+                </button>
+                <button type="button" class="filter-btn" onclick="filterDisasters('cyclone')">
+                    <i class="fas fa-wind"></i> Cyclones
+                </button>
+            </div>
+        </div>
+
+        <!-- ALERTS LIST -->
+        <section class="alerts-section">
+            <div class="section-head">
+                <h2><i class="fa-solid fa-satellite-dish"></i> Live Emergency Feed</h2>
+                <button id="refreshAlertsBtn" class="btn-refresh" type="button">
+                    <i class="fa-solid fa-arrows-rotate"></i> Refresh Feed
+                </button>
+            </div>
+
+            <div id="alertsContainer" class="alerts-grid">
+                <!-- Loaded by JS -->
+            </div>
+        </section>
+
+        <!-- CRISIS COMMAND & QUICK ACTIONS -->
+        <section class="command-section">
+            <div class="command-card">
+                <h3><i class="fa-solid fa-bolt"></i> Emergency Response Operations</h3>
+                <p>Initiate automated priority orbital tasking and generate disaster situation reports.</p>
+                <div class="action-buttons">
+                    <button class="btn-action-primary" onclick="generateDisasterBriefing()">
+                        <i class="fa-solid fa-file-pdf"></i> Export Live Disaster Briefing (PDF)
+                    </button>
+                    <button class="btn-action-secondary" onclick="simulateDroneDispatch()">
+                        <i class="fa-solid fa-plane-circle-exclamation"></i> Task Emergency Orbiters
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ALERT DETAIL MODAL -->
+    <div id="alertModal" class="modal-overlay" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modalTitle">Incident Details</h3>
+                <button class="btn-close-modal" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-badge" id="modalSeverity">CRITICAL</div>
+                <div class="modal-info-row">
+                    <span>Location:</span>
+                    <strong id="modalLocation">Location</strong>
+                </div>
+                <div class="modal-info-row">
+                    <span>Intensity / Metric:</span>
+                    <strong id="modalMagnitude">Magnitude</strong>
+                </div>
+                <div class="modal-info-row">
+                    <span>Report Time:</span>
+                    <strong id="modalTime">Just Now</strong>
+                </div>
+                <div class="modal-desc" id="modalDetails">
+                    Incident description and tactical telemetry.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btnModalPdf" class="btn-modal-pdf"><i class="fa-solid fa-file-pdf"></i> Download Incident PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-left">
+            <i class="fa-solid fa-satellite"></i> Satellite AI Planetary Crisis Response Center
+        </div>
+        <div class="footer-right">
+            &copy; 2026 Emergency Telemetry Directorate.
+        </div>
+    </footer>
+
+    <script src="disaster-alerts.js"></script>
+    <script src="auth.js"></script>
+    <script src="ai-assistant.js"></script>
+</body>
+</html>

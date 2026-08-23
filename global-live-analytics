@@ -1,0 +1,258 @@
+"use strict";
+
+/* =========================================================
+   SATELLITE AI
+   LIVE ANALYTICS IMAGE ROTATION
+========================================================= */
+
+
+/* =========================================================
+   FOREST IMAGES
+========================================================= */
+
+const forestImages = [
+
+    "img1.jpg",
+
+    "images1.png",
+
+    "forest.jpg",
+
+    "forest1.png"
+
+];
+
+
+/* =========================================================
+   FLOOD IMAGES
+========================================================= */
+
+const floodImages = [
+
+    "img2.jpg",
+
+    "flood.jpg",
+
+    "flood1.jpg",
+
+    "flood2.jpg"
+];
+
+
+/* =========================================================
+   URBAN IMAGES
+========================================================= */
+
+const urbanImages = [
+
+    "img3.jpg",
+
+    "images3.jpg.png.png",
+
+    "urban.jpg",
+
+    "urban1.jpg.png"
+
+];
+
+
+/* =========================================================
+   CURRENT IMAGE INDEX
+========================================================= */
+
+let forestIndex = 0;
+let floodIndex = 0;
+let urbanIndex = 0;
+
+
+/* =========================================================
+   CHANGE IMAGE
+========================================================= */
+
+function changeLiveImage(
+    imageId,
+    images,
+    index
+) {
+
+    const image =
+        document.getElementById(imageId);
+
+
+    if (!image) {
+
+        console.warn(
+            "Image element not found:",
+            imageId
+        );
+
+        return index;
+
+    }
+
+
+    /* Fade out */
+
+    image.classList.add(
+        "image-changing"
+    );
+
+
+    setTimeout(
+        function() {
+
+            image.src =
+                images[index];
+
+
+            image.onload =
+                function() {
+
+                    image.classList.remove(
+                        "image-changing"
+                    );
+
+                };
+
+
+            image.onerror =
+                function() {
+
+                    console.warn(
+                        "Image not found:",
+                        images[index]
+                    );
+
+                    image.classList.remove(
+                        "image-changing"
+                    );
+
+                };
+
+        },
+        800
+    );
+
+
+    return index;
+
+}
+
+
+/* =========================================================
+   FOREST
+========================================================= */
+
+function changeForestImage() {
+
+    forestIndex++;
+
+    if (
+        forestIndex >=
+        forestImages.length
+    ) {
+
+        forestIndex = 0;
+
+    }
+
+
+    changeLiveImage(
+        "forestLiveImage",
+        forestImages,
+        forestIndex
+    );
+
+}
+
+
+/* =========================================================
+   FLOOD
+========================================================= */
+
+function changeFloodImage() {
+
+    floodIndex++;
+
+    if (
+        floodIndex >=
+        floodImages.length
+    ) {
+
+        floodIndex = 0;
+
+    }
+
+
+    changeLiveImage(
+        "floodLiveImage",
+        floodImages,
+        floodIndex
+    );
+
+}
+
+
+/* =========================================================
+   URBAN
+========================================================= */
+
+function changeUrbanImage() {
+
+    urbanIndex++;
+
+    if (
+        urbanIndex >=
+        urbanImages.length
+    ) {
+
+        urbanIndex = 0;
+
+    }
+
+
+    changeLiveImage(
+        "urbanLiveImage",
+        urbanImages,
+        urbanIndex
+    );
+
+}
+
+
+/* =========================================================
+   START LIVE ANALYTICS
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+
+        console.log(
+            "🛰 Satellite AI Live Analytics started."
+        );
+
+
+        /*
+         * Change one image every 5 seconds.
+         */
+
+        setInterval(
+            changeForestImage,
+            5000
+        );
+
+
+        setInterval(
+            changeFloodImage,
+            7000
+        );
+
+
+        setInterval(
+            changeUrbanImage,
+            9000
+        );
+
+    }
+);

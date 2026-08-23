@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite AI | Multi-Spectral Imagery Ingestion & Uploader</title>
+
+    <link rel="stylesheet" href="upload-images.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <!-- Chart.js for AI Assistant -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- ================= TOP NAVBAR ================= -->
+    <header class="top-nav">
+        <div class="nav-brand">
+            <a href="index.html" class="brand-link">
+                <i class="fa-solid fa-satellite"></i>
+                <div>
+                    <h2>Satellite AI</h2>
+                    <small>Imagery Ingestion Hub</small>
+                </div>
+            </a>
+        </div>
+
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a href="earth.html"><i class="fa-solid fa-globe"></i> 3D Earth</a></li>
+            <li><a href="change-detection.html"><i class="fa-solid fa-arrows-rotate"></i> Change Detection</a></li>
+            <li><a href="urban-growth.html"><i class="fa-solid fa-city"></i> Urban Growth</a></li>
+            <li><a href="forest-monitoring.html"><i class="fa-solid fa-tree"></i> Forest</a></li>
+            <li><a href="flood-analysis.html"><i class="fa-solid fa-water"></i> Flood</a></li>
+            <li><a href="climate-monitoring.html"><i class="fa-solid fa-cloud-sun"></i> Climate</a></li>
+            <li><a href="disaster-alerts.html"><i class="fa-solid fa-triangle-exclamation"></i> Alerts</a></li>
+            <li><a href="reports.html"><i class="fa-solid fa-file-lines"></i> Reports</a></li>
+            <li><a href="dashboard.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <div class="live-status"><span class="live-dot"></span> LIVE INGESTION</div>
+            <a href="login.html" class="user-pill"><i class="fa-solid fa-user-astronaut"></i> <span id="navUserName">Analyst</span></a>
+        </div>
+    </header>
+
+    <!-- ================= HERO ================= -->
+    <header class="hero">
+        <div class="overlay"></div>
+        <div class="hero-content">
+            <span class="hero-badge"><i class="fa-solid fa-cloud-arrow-up"></i> High-Resolution Optical & SAR Ingestion</span>
+            <h1>
+                <i class="fa-solid fa-satellite"></i>
+                Upload Satellite Imagery Pairs
+            </h1>
+            <p>
+                Upload baseline (Before) and current (After) satellite observation frames to dispatch directly to AI Change Detection, Urban Expansion, Forest Cover, or Flood Inundation modules.
+            </p>
+        </div>
+    </header>
+
+    <!-- ================= MAIN CONTAINER ================= -->
+    <main class="container">
+
+        <!-- Before Image Card -->
+        <div class="upload-card" id="beforeCard">
+            <div class="icon">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+            <h2>Baseline (Before) Observation</h2>
+            <p style="font-size:13px; color:#cbd5e1; margin-bottom:12px;">Prior temporal satellite acquisition frame</p>
+
+            <div class="preview-wrapper">
+                <img id="beforePreview" src="images/before image.png" alt="Before Satellite Frame" onerror="this.src='https://placehold.co/400x250/0b1329/00e5ff?text=Before+Image'">
+            </div>
+
+            <label class="upload-btn">
+                <i class="fa-solid fa-upload"></i> Choose Baseline File
+                <input type="file" id="beforeInput" accept="image/*" hidden>
+            </label>
+            <span id="beforeFileName" class="file-tag">before image.png</span>
+        </div>
+
+        <!-- After Image Card -->
+        <div class="upload-card" id="afterCard">
+            <div class="icon">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+            <h2>Current (After) Observation</h2>
+            <p style="font-size:13px; color:#cbd5e1; margin-bottom:12px;">Recent or active orbital observation frame</p>
+
+            <div class="preview-wrapper">
+                <img id="afterPreview" src="images/after image.png" alt="After Satellite Frame" onerror="this.src='https://placehold.co/400x250/0b1329/00e5ff?text=After+Image'">
+            </div>
+
+            <label class="upload-btn">
+                <i class="fa-solid fa-upload"></i> Choose Current File
+                <input type="file" id="afterInput" accept="image/*" hidden>
+            </label>
+            <span id="afterFileName" class="file-tag">after image.png</span>
+        </div>
+
+    </main>
+
+    <!-- ================= DISPATCH & ACTION TOOLBAR ================= -->
+    <div class="dispatch-panel">
+        <h3><i class="fa-solid fa-microchip"></i> Dispatch Imagery to Neural Processing Pipeline</h3>
+        <div class="dispatch-buttons">
+            <a href="change-detection.html" class="action-btn btn-change">
+                <i class="fa-solid fa-arrows-rotate"></i> Change Detection
+            </a>
+            <a href="urban-growth.html" class="action-btn btn-urban">
+                <i class="fa-solid fa-city"></i> Urban Growth
+            </a>
+            <a href="forest-monitoring.html" class="action-btn btn-forest">
+                <i class="fa-solid fa-tree"></i> Forest Monitoring
+            </a>
+            <a href="flood-analysis.html" class="action-btn btn-flood">
+                <i class="fa-solid fa-water"></i> Flood Inundation
+            </a>
+            <button type="button" class="action-btn btn-clear" onclick="clearUploads()">
+                <i class="fa-solid fa-trash"></i> Reset
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="upload-images.js"></script>
+    <script src="auth.js"></script>
+    <script src="ai-assistant.js"></script>
+</body>
+</html>

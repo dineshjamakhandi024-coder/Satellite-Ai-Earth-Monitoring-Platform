@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite AI | Global Earth Monitoring & Planetary Telemetry</title>
+
+    <link rel="stylesheet" href="global-monitoring.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <header class="top-nav">
+        <div class="nav-brand">
+            <a href="index.html" class="brand-link">
+                <i class="fa-solid fa-satellite"></i>
+                <div>
+                    <h2>Satellite AI</h2>
+                    <small>Global Earth Observation Network</small>
+                </div>
+            </a>
+        </div>
+
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a href="earth.html"><i class="fa-solid fa-globe"></i> 3D Earth</a></li>
+            <li><a href="change-detection.html"><i class="fa-solid fa-arrows-rotate"></i> Change Detection</a></li>
+            <li><a href="urban-growth.html"><i class="fa-solid fa-city"></i> Urban Growth</a></li>
+            <li><a href="forest-monitoring.html"><i class="fa-solid fa-tree"></i> Forest</a></li>
+            <li><a href="flood-analysis.html"><i class="fa-solid fa-water"></i> Flood</a></li>
+            <li><a href="climate-monitoring.html"><i class="fa-solid fa-cloud-sun"></i> Climate</a></li>
+            <li><a href="disaster-alerts.html"><i class="fa-solid fa-triangle-exclamation"></i> Alerts</a></li>
+            <li><a href="reports.html"><i class="fa-solid fa-file-lines"></i> Reports</a></li>
+            <li><a href="dashboard.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <div class="live-status"><span class="live-dot"></span> LIVE SATELLITE TELEMETRY</div>
+            <div class="clock"><i class="fa-solid fa-clock"></i> <span id="globalClock">UTC 00:00:00</span></div>
+        </div>
+    </header>
+
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+        <span class="badge"><i class="fa-solid fa-globe"></i> Constellation of 18 Synchronous Satellites</span>
+        <h1>🌍 Global Earth Observation & Telemetry Hub</h1>
+        <p>
+            Autonomous orbital monitoring of environmental parameters, forest canopy shifts, hydrological expansion, urban footprint developments, and disaster emergency alerts across 195 nations.
+        </p>
+    </section>
+
+    <!-- ================= MAIN CONTAINER ================= -->
+    <main class="container">
+
+        <!-- STATS GRID -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <i class="fa-solid fa-satellite"></i>
+                <h2 id="dispSatellites">18</h2>
+                <p>Active Satellites</p>
+                <small class="badge-online">🟢 All Online</small>
+            </div>
+
+            <div class="stat-card">
+                <i class="fa-solid fa-earth-americas"></i>
+                <h2 id="dispCountries">195</h2>
+                <p>Countries Covered</p>
+                <small class="badge-blue">Updated Live</small>
+            </div>
+
+            <div class="stat-card">
+                <i class="fa-solid fa-tree"></i>
+                <h2 id="dispForest">82.4%</h2>
+                <p>Forest Coverage</p>
+                <small class="badge-green">Stable Canopy</small>
+            </div>
+
+            <div class="stat-card">
+                <i class="fa-solid fa-city"></i>
+                <h2 id="dispUrban">12.8%</h2>
+                <p>Urban Expansion</p>
+                <small class="badge-blue">Growing Footprint</small>
+            </div>
+
+            <div class="stat-card">
+                <i class="fa-solid fa-water"></i>
+                <h2 id="dispWater">71.0%</h2>
+                <p>Surface Waterbodies</p>
+                <small class="badge-blue">Hydrological Grid</small>
+            </div>
+
+            <div class="stat-card">
+                <i class="fa-solid fa-temperature-three-quarters"></i>
+                <h2 id="dispGlobalTemp">29.2°C</h2>
+                <p>Global Average Temp</p>
+                <small class="badge-orange">+0.4°C Anomaly</small>
+            </div>
+        </section>
+
+        <!-- EARTH MONITORING CENTER & MODULE PROGRESS -->
+        <section class="overview-section">
+            <div class="earth-center-card">
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                    <h2><i class="fa-solid fa-earth-africa"></i> Planetary Focus & Satellite Tracking</h2>
+                    <a href="earth.html" class="badge-blue" style="text-decoration:none; padding:6px 12px; font-weight:700;"><i class="fa-solid fa-cube"></i> Open 3D Globe</a>
+                </div>
+                <div class="earth-visual-wrap">
+                    <a href="earth.html" title="Click to Launch 3D Earth">
+                        <img src="images/earth.jpg.png" alt="Earth Satellite View" class="rotating-earth" onerror="this.src='images/earth.jpg'">
+                    </a>
+                    <div class="orbit-ring"></div>
+                </div>
+
+                <div class="earth-telemetry-grid">
+                    <div class="telemetry-box">
+                        <span>Current Orbital Focus:</span>
+                        <strong id="dispFocus">Asia-Pacific & Amazon Basin</strong>
+                    </div>
+                    <div class="telemetry-box">
+                        <span>Last Telemetry Scan:</span>
+                        <strong id="dispLastScan">20 Seconds Ago</strong>
+                    </div>
+                    <div class="telemetry-box">
+                        <span>System Health:</span>
+                        <strong class="text-green">All Systems Nominal</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-card">
+                <h2><i class="fa-solid fa-bars-progress"></i> Observation Module Progress</h2>
+
+                <div class="prog-item">
+                    <div class="prog-header">
+                        <span><i class="fa-solid fa-tree text-green"></i> Forest Canopy Monitoring</span>
+                        <strong id="valProgForest">85%</strong>
+                    </div>
+                    <div class="prog-track"><div id="barProgForest" class="prog-fill green" style="width: 85%;"></div></div>
+                </div>
+
+                <div class="prog-item">
+                    <div class="prog-header">
+                        <span><i class="fa-solid fa-water text-blue"></i> Flood Disaster Analysis</span>
+                        <strong id="valProgFlood">72%</strong>
+                    </div>
+                    <div class="prog-track"><div id="barProgFlood" class="prog-fill blue" style="width: 72%;"></div></div>
+                </div>
+
+                <div class="prog-item">
+                    <div class="prog-header">
+                        <span><i class="fa-solid fa-city text-cyan"></i> Urban Growth & Infrastructure</span>
+                        <strong id="valProgUrban">65%</strong>
+                    </div>
+                    <div class="prog-track"><div id="barProgUrban" class="prog-fill cyan" style="width: 65%;"></div></div>
+                </div>
+
+                <div class="prog-item">
+                    <div class="prog-header">
+                        <span><i class="fa-solid fa-cloud-sun text-yellow"></i> Climate & Atmospheric Intel</span>
+                        <strong id="valProgClimate">90%</strong>
+                    </div>
+                    <div class="prog-track"><div id="barProgClimate" class="prog-fill yellow" style="width: 90%;"></div></div>
+                </div>
+
+                <div class="prog-item">
+                    <div class="prog-header">
+                        <span><i class="fa-solid fa-triangle-exclamation text-red"></i> Planetary Disaster Alerts</span>
+                        <strong id="valProgDisaster">78%</strong>
+                    </div>
+                    <div class="prog-track"><div id="barProgDisaster" class="prog-fill red" style="width: 78%;"></div></div>
+                </div>
+
+                <div class="quick-nav-grid">
+                    <a href="change-detection.html" class="btn-quick-nav"><i class="fa-solid fa-arrows-rotate"></i> Change Detection</a>
+                    <a href="reports.html" class="btn-quick-nav"><i class="fa-solid fa-file-lines"></i> View Reports</a>
+                    <a href="dashboard.html" class="btn-quick-nav"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-left">
+            <i class="fa-solid fa-satellite"></i> Satellite AI Global Earth Monitoring System
+        </div>
+        <div class="footer-right">
+            &copy; 2026 International Space Telemetry Grid. All rights reserved.
+        </div>
+    </footer>
+
+    <script src="global-monitoring.js"></script>
+    <script src="auth.js"></script>
+    <script src="ai-assistant.js"></script>
+</body>
+</html>

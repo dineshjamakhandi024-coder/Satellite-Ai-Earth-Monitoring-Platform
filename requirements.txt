@@ -1,0 +1,24 @@
+# ============================================================
+# SATELLITE AI - PYTHON DEPENDENCIES
+# Earth Observation, Computer Vision & Monitoring Platform
+# ============================================================
+
+# Web API Framework & ASGI Server
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.5.0
+python-multipart>=0.0.6
+
+# Computer Vision & Image Processing
+opencv-python>=4.8.0
+numpy>=1.24.0
+Pillow>=10.0.0
+
+# PDF Report Generation Engine
+reportlab>=4.0.0
+
+# Mobile Server & QR Code Generator
+qrcode[pil]>=7.4.2
+
+# Optional Testing & HTTP Client
+requests>=2.31.0

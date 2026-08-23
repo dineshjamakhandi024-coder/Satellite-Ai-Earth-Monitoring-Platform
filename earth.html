@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite AI | 3D Interactive Earth & National Weather Hub</title>
+
+    <!-- CSS Styling -->
+    <link rel="stylesheet" href="earth.css">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    
+    <!-- Three.js & Controls -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!-- GSAP for Smooth Camera Fly-To Zoom -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+</head>
+
+<body>
+
+    <!-- ============================================================
+         1. TOP TELEMETRY NAVIGATION BAR
+    ============================================================ -->
+    <header class="top-nav">
+        <a href="index.html" class="brand">
+            <div class="brand-icon">
+                <i class="fa-solid fa-earth-americas"></i>
+            </div>
+            <div class="brand-text">
+                <h1>Satellite AI</h1>
+                <small>3D Planetary & National Weather Hub</small>
+            </div>
+        </a>
+
+        <!-- Primary Navigation Links -->
+        <ul class="nav-links">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a href="earth.html" class="active"><i class="fa-solid fa-globe"></i> 3D Earth</a></li>
+            <li><a href="climate-monitoring.html"><i class="fa-solid fa-cloud-sun"></i> Climate & Weather</a></li>
+            <li><a href="change-detection.html"><i class="fa-solid fa-arrows-rotate"></i> Change Detection</a></li>
+            <li><a href="forest-monitoring.html"><i class="fa-solid fa-tree"></i> Forest</a></li>
+            <li><a href="flood-analysis.html"><i class="fa-solid fa-water"></i> Flood</a></li>
+            <li><a href="urban-growth.html"><i class="fa-solid fa-city"></i> Urban</a></li>
+            <li><a href="disaster-alerts.html"><i class="fa-solid fa-triangle-exclamation"></i> Alerts</a></li>
+            <li><a href="dashboard.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+        </ul>
+
+        <!-- Live Aerospace Telemetry Chips -->
+        <div class="nav-telemetry">
+            <div class="telemetry-chip live">
+                <span class="live-dot"></span>
+                <span>LIVE TELEMETRY</span>
+            </div>
+            <div class="telemetry-chip">
+                <i class="fa-solid fa-clock" style="color:var(--accent-cyan)"></i>
+                <span id="utcClock">UTC 00:00:00</span>
+            </div>
+            <div class="telemetry-chip">
+                <i class="fa-solid fa-cloud-sun" style="color:var(--accent-cyan)"></i>
+                <span><b id="dispCountryCount">30+</b> Nations Active</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================
+         2. FULLSCREEN 3D WEBGL EARTH CANVAS
+    ============================================================ -->
+    <main id="earth-canvas-container" title="Click ANY place on Earth to zoom & pin live weather | Drag to Rotate | Scroll to Zoom"></main>
+
+    <!-- ============================================================
+         3. LEFT HUD PANEL: GLOBAL SEARCH, WEATHER & AI ANOMALIES
+    ============================================================ -->
+    <aside class="hud-panel left" id="hudLeft">
+        <!-- Worldwide City & Place Instant Search -->
+        <div class="hud-global-search-container">
+            <div class="hud-search-box global-search">
+                <i class="fa-solid fa-location-crosshairs" style="color:var(--accent-cyan)"></i>
+                <input type="text" id="globalPlaceSearchInput" placeholder="Search ANY city/place worldwide..." autocomplete="off">
+            </div>
+            <div id="placeSearchResultsDropdown" class="search-results-dropdown" style="display:none;"></div>
+        </div>
+
+        <!-- Tab Selector -->
+        <div class="hud-tabs">
+            <button class="hud-tab-btn active" id="tabBtn-weather" onclick="switchLeftHudTab('weather')">
+                <i class="fa-solid fa-cloud-sun"></i> National Weather
+            </button>
+            <button class="hud-tab-btn" id="tabBtn-ai" onclick="switchLeftHudTab('ai')">
+                <i class="fa-solid fa-microchip"></i> AI Anomaly Feed
+            </button>
+        </div>
+
+        <!-- TAB 1: National Weather Explorer -->
+        <div class="hud-tab-content active" id="tabContent-weather">
+            <div class="hud-search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="countrySearchInput" placeholder="Filter countries list (e.g. India)..." oninput="filterCountryWeather(this.value)">
+            </div>
+            <div class="hud-scroll-body" id="countryWeatherList">
+                <!-- Populated with global nations by earth-3d.js -->
+            </div>
+        </div>
+
+        <!-- TAB 2: AI Detection Feed -->
+        <div class="hud-tab-content" id="tabContent-ai">
+            <div class="hud-scroll-body" id="aiDetectionList">
+                <!-- Populated with AI detections -->
+            </div>
+        </div>
+    </aside>
+
+    <!-- ============================================================
+         4. RIGHT HUD PANEL: SATELLITE FLEET TELEMETRY
+    ============================================================ -->
+    <aside class="hud-panel right" id="hudRight">
+        <div class="hud-header">
+            <h3><i class="fa-solid fa-satellite"></i> Constellation Fleet</h3>
+            <span class="hud-badge">Synch LEO</span>
+        </div>
+        <div class="hud-scroll-body" id="satelliteList">
+            <!-- Dynamic Satellite Items inserted by earth-3d.js -->
+        </div>
+        <div class="panel-stats-grid">
+            <div class="panel-stat-box">
+                <span>Altitude:</span>
+                <strong id="dispCameraAlt">12,450 km</strong>
+            </div>
+            <div class="panel-stat-box">
+                <span>Orbital Sync:</span>
+                <strong style="color:var(--accent-emerald)">99.98%</strong>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ============================================================
+         5. BOTTOM FLIGHT DECK & ORBITAL CONTROLS DOCK
+    ============================================================ -->
+    <nav class="bottom-dock" id="bottomDock">
+        <!-- Pin Tool & Auto-Rotate Section -->
+        <div class="dock-section">
+            <button class="btn-dock highlight" id="btnPinMode" onclick="togglePinMode()" title="Click anywhere on Earth to drop a 3D pin and get live meteorological weather">
+                <i class="fa-solid fa-location-dot"></i> Pin Anywhere
+            </button>
+            <button class="btn-dock active" id="btnAutoRotate" onclick="toggleAutoRotate()" title="Toggle Axial Earth Rotation">
+                <i class="fa-solid fa-pause"></i> Auto Spin
+            </button>
+            <div class="speed-group">
+                <button class="speed-pill" id="speed-0.5x" onclick="setRotationSpeed(0.5)">0.5x</button>
+                <button class="speed-pill active" id="speed-1x" onclick="setRotationSpeed(1)">1x</button>
+                <button class="speed-pill" id="speed-2x" onclick="setRotationSpeed(2)">2x</button>
+                <button class="speed-pill" id="speed-5x" onclick="setRotationSpeed(5)">5x</button>
+            </div>
+        </div>
+
+        <div class="dock-divider"></div>
+
+        <!-- 24H Sun / Day-Night Scrubber -->
+        <div class="dock-section">
+            <div class="sun-control">
+                <span><i class="fa-solid fa-sun" style="color:#f59e0b"></i> Sun:</span>
+                <input type="range" class="sun-slider" id="sunSlider" min="0" max="100" value="13" oninput="onSunScrub(this.value)" title="Adjust Solar Terminator & Day/Night Position">
+            </div>
+        </div>
+
+        <div class="dock-divider"></div>
+
+        <!-- Layer Visibility Toggles -->
+        <div class="dock-section layers-group">
+            <button class="layer-toggle active" id="toggle-subsurfaceCore" onclick="toggleSubsurfaceView()" title="Toggle Subsurface Interior & Earth Core View">
+                <i class="fa-solid fa-gem"></i> Core
+            </button>
+            <button class="layer-toggle active" id="toggle-countryPins" onclick="toggleLayer('countryPins')" title="Toggle National Weather Pins">
+                <i class="fa-solid fa-flag"></i> Nations
+            </button>
+            <button class="layer-toggle active" id="toggle-satellites" onclick="toggleLayer('satellites')" title="Toggle Orbiting Satellites">
+                <i class="fa-solid fa-satellite"></i> Sats
+            </button>
+            <button class="layer-toggle active" id="toggle-orbits" onclick="toggleLayer('orbits')" title="Toggle Orbit Trajectory Paths">
+                <i class="fa-solid fa-circle-notch"></i> Orbits
+            </button>
+            <button class="layer-toggle active" id="toggle-aiMarkers" onclick="toggleLayer('aiMarkers')" title="Toggle AI Detection Beacons">
+                <i class="fa-solid fa-location-dot"></i> Anomalies
+            </button>
+            <button class="layer-toggle active" id="toggle-clouds" onclick="toggleLayer('clouds')" title="Toggle Atmospheric Cloud Cover">
+                <i class="fa-solid fa-cloud"></i> Clouds
+            </button>
+            <button class="layer-toggle active" id="toggle-atmosphere" onclick="toggleLayer('atmosphere')" title="Toggle Atmospheric Rayleigh Glow">
+                <i class="fa-solid fa-globe"></i> Glow
+            </button>
+            <button class="layer-toggle active" id="toggle-nightLights" onclick="toggleLayer('nightLights')" title="Toggle Night City Lights">
+                <i class="fa-solid fa-city"></i> Night
+            </button>
+            <button class="layer-toggle active" id="toggle-starfield" onclick="toggleLayer('starfield')" title="Toggle Star Background">
+                <i class="fa-solid fa-star"></i> Stars
+            </button>
+        </div>
+
+        <div class="dock-divider"></div>
+
+        <!-- Tour & Speed Section -->
+        <div class="dock-section">
+            <button class="btn-dock highlight" id="btnTour" onclick="toggleGuidedTour()" title="Cinematic Tour of Global AI Hotspots">
+                <i class="fa-solid fa-play"></i> Tour
+            </button>
+            <div class="speed-group" id="tourSpeedGroup" title="Set Guided Tour Speed">
+                <button class="speed-pill" id="tourSpeed-0.5x" onclick="setTourSpeed(0.5)">0.5x</button>
+                <button class="speed-pill active" id="tourSpeed-1x" onclick="setTourSpeed(1)">1x</button>
+                <button class="speed-pill" id="tourSpeed-2x" onclick="setTourSpeed(2)">2x</button>
+                <button class="speed-pill" id="tourSpeed-4x" onclick="setTourSpeed(4)">4x</button>
+            </div>
+            <button class="btn-dock" onclick="resetEarthView()" title="Reset Camera View & Clear Target Pin">
+                <i class="fa-solid fa-crosshairs"></i> Reset
+            </button>
+            <button class="btn-dock" onclick="toggleDrawer()" title="Open Monitoring Analysis Modules">
+                <i class="fa-solid fa-table-cells-large"></i> Modules
+            </button>
+        </div>
+    </nav>
+
+    <!-- ============================================================
+         6. FLOATING INSPECTOR CARD (AI HOTSPOT / SATELLITE TELEMETRY)
+    ============================================================ -->
+    <section class="inspector-card" id="inspectorCard">
+        <div class="insp-header">
+            <h3 id="inspectorTitle"><i class="fa-solid fa-satellite"></i> Telemetry Inspector</h3>
+            <span id="inspectorBadge" class="badge-blue">Active</span>
+        </div>
+        <div id="inspectorBody">
+            <!-- Populated on click of satellite or AI detection marker -->
+        </div>
+    </section>
+
+    <!-- ============================================================
+         7. NATIONAL WEATHER INTELLIGENCE MODAL (FULLSCREEN GLASS MODAL)
+    ============================================================ -->
+    <section class="national-weather-modal" id="nationalWeatherModal">
+        <div class="n-weather-container" id="nationalWeatherBody">
+            <!-- Populated dynamically by NationalWeatherService in national-weather.js -->
+        </div>
+    </section>
+
+    <!-- ============================================================
+         8. COLLAPSIBLE MONITORING MODULES DRAWER
+    ============================================================ -->
+    <section class="modules-drawer" id="modulesDrawer">
+        <div class="drawer-header">
+            <h2><i class="fa-solid fa-table-cells-large"></i> Earth Observation Analysis Modules</h2>
+            <button class="btn-close-drawer" onclick="toggleDrawer()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="modules-grid">
+            <a href="climate-monitoring.html" class="module-card">
+                <i class="fa-solid fa-cloud-sun"></i>
+                <h4>Climate & Weather</h4>
+                <p>Atmospheric thermal soundings & precipitation</p>
+            </a>
+            <a href="global-monitoring.html" class="module-card">
+                <i class="fa-solid fa-globe"></i>
+                <h4>Global Telemetry</h4>
+                <p>Planetary coverage & multi-satellite sync</p>
+            </a>
+            <a href="change-detection.html" class="module-card">
+                <i class="fa-solid fa-arrows-rotate"></i>
+                <h4>Change Detection</h4>
+                <p>Multi-temporal bi-spectral difference engine</p>
+            </a>
+            <a href="forest-monitoring.html" class="module-card">
+                <i class="fa-solid fa-tree"></i>
+                <h4>Forest Detection</h4>
+                <p>Deforestation & canopy health diagnostics</p>
+            </a>
+            <a href="flood-analysis.html" class="module-card">
+                <i class="fa-solid fa-water"></i>
+                <h4>Flood Analysis</h4>
+                <p>Synthetic Aperture Radar water extent tracking</p>
+            </a>
+            <a href="urban-growth.html" class="module-card">
+                <i class="fa-solid fa-city"></i>
+                <h4>Urban Growth</h4>
+                <p>Megacity infrastructure & footprint expansion</p>
+            </a>
+            <a href="disaster-alerts.html" class="module-card">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <h4>Disaster Alerts</h4>
+                <p>Real-time wildfire & cyclone early warning</p>
+            </a>
+            <a href="reports.html" class="module-card">
+                <i class="fa-solid fa-file-lines"></i>
+                <h4>Telemetry Reports</h4>
+                <p>Export mission diagnostics & satellite logs</p>
+            </a>
+            <a href="dashboard.html" class="module-card">
+                <i class="fa-solid fa-chart-line"></i>
+                <h4>Dashboard</h4>
+                <p>Global metrics, alert counts & image archive</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         9. FLOATING AI ASSISTANT LAUNCHER BUTTON
+    ============================================================ -->
+    <button class="ai-chat-launcher" id="aiChatLauncher" onclick="toggleAIChat()" title="Open Satellite AI Voice & Chat Assistant">
+        <div class="ai-launcher-inner">
+            <i class="fa-solid fa-robot"></i>
+            <span class="ai-pulse-ring"></span>
+        </div>
+        <span class="ai-launcher-label">AI Navigator</span>
+    </button>
+
+    <!-- ============================================================
+         10. EXPANDABLE SATELLITE AI VOICE & CHAT DRAWER
+    ============================================================ -->
+    <section class="ai-chat-drawer" id="aiChatDrawer">
+        <div class="ai-chat-header">
+            <div class="ai-header-brand">
+                <div class="ai-bot-avatar">
+                    <i class="fa-solid fa-satellite-dish"></i>
+                </div>
+                <div>
+                    <h3>Satellite AI Navigator</h3>
+                    <small id="aiVoiceStatus">Voice & Place Intelligence Online</small>
+                </div>
+            </div>
+            <div class="ai-header-tools">
+                <button type="button" class="btn-ai-tool btn-ai-mic" onclick="AIAssistant.toggleVoiceRecognition()" title="Voice Command Mic">
+                    <i class="fa-solid fa-microphone"></i>
+                </button>
+                <button type="button" class="btn-ai-tool close" onclick="toggleAIChat()" title="Close Assistant">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Audio Waveform Visualizer (When listening) -->
+        <div class="ai-audio-waveform" id="aiAudioWaveform" style="display:none;">
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <span>Listening for voice command...</span>
+        </div>
+
+        <!-- Message History -->
+        <div class="ai-chat-messages" id="aiChatMessages">
+            <div class="chat-msg assistant">
+                <div class="msg-avatar"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <div class="msg-bubble">
+                    <div class="msg-text">
+                        ✨ Hi there! I'm your <strong>Satellite AI Navigator</strong> 💕 
+                        <p style="margin:4px 0 6px 0;">You can <strong>speak to me hands-free</strong> or type any command to:</p>
+                        <ul style="margin: 0 0 0 16px; font-size:12px; line-height:1.5;">
+                            <li>Search any place worldwide (e.g. <i>"Weather in Tokyo"</i>, <i>"Fly to Paris"</i>)</li>
+                            <li>Pin inside the Earth & check deep borehole telemetry</li>
+                            <li>Track orbiting satellites like the <i>ISS</i> or <i>Sentinel-2</i></li>
+                            <li>View climate anomalies & wildfire hotspots</li>
+                        </ul>
+                    </div>
+                    <span class="msg-time">Online</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Action Prompt Chips -->
+        <div class="ai-quick-chips-wrapper">
+            <div class="ai-quick-chips" id="aiQuickChips"></div>
+        </div>
+
+        <!-- Input Bar with Mic & Send -->
+        <form class="ai-chat-input-bar" id="aiChatForm">
+            <button type="button" class="btn-ai-mic" onclick="AIAssistant.toggleVoiceRecognition()" title="Hold/Click to Speak">
+                <i class="fa-solid fa-microphone"></i>
+            </button>
+            <input type="text" id="aiChatInput" placeholder="Ask AI or speak a place (e.g. 'Weather in Tokyo')..." autocomplete="off">
+            <button type="submit" class="btn-ai-send" title="Send Query">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </form>
+    </section>
+
+    <!-- Drawer Toggle Helper -->
+    <script>
+        function toggleDrawer() {
+            const drawer = document.getElementById('modulesDrawer');
+            if (drawer) drawer.classList.toggle('open');
+        }
+    </script>
+
+    <!-- 3D Earth Engine, Weather & AI Assistant Scripts -->
+    <script src="national-weather.js"></script>
+    <script src="earth-3d.js"></script>
+    <script src="ai-assistant.js"></script>
+    <script src="auth.js"></script>
+</body>
+
+</html>

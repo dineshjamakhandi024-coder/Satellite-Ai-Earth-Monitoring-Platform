@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite AI | AI Change Detection</title>
+
+    <link rel="stylesheet" href="change.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <header class="top-nav">
+        <div class="nav-brand">
+            <a href="index.html" class="brand-link">
+                <i class="fa-solid fa-satellite"></i>
+                <div>
+                    <h2>Satellite AI</h2>
+                    <small>Change Detection Lab</small>
+                </div>
+            </a>
+        </div>
+
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a href="earth.html"><i class="fa-solid fa-globe"></i> 3D Earth</a></li>
+            <li><a href="change-detection.html" class="active"><i class="fa-solid fa-arrows-rotate"></i> Change Detection</a></li>
+            <li><a href="urban-growth.html"><i class="fa-solid fa-city"></i> Urban Growth</a></li>
+            <li><a href="forest-monitoring.html"><i class="fa-solid fa-tree"></i> Forest</a></li>
+            <li><a href="flood-analysis.html"><i class="fa-solid fa-water"></i> Flood</a></li>
+            <li><a href="climate-monitoring.html"><i class="fa-solid fa-cloud-sun"></i> Climate</a></li>
+            <li><a href="disaster-alerts.html"><i class="fa-solid fa-triangle-exclamation"></i> Alerts</a></li>
+            <li><a href="reports.html"><i class="fa-solid fa-file-lines"></i> Reports</a></li>
+            <li><a href="dashboard.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <div class="live-tag"><span class="live-pulse"></span> ONLINE</div>
+            <a href="login.html" class="user-pill"><i class="fa-solid fa-user-astronaut"></i> <span id="navUserName">Analyst</span></a>
+        </div>
+    </header>
+
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge"><i class="fa-solid fa-microchip"></i> Computer Vision & Multi-Spectral AI</span>
+            <h1>AI Satellite Change Detection</h1>
+            <p>
+                Upload multi-temporal satellite imagery to perform sub-pixel alignment, structural similarity indexing, and automated environmental change segmentation.
+            </p>
+        </div>
+    </section>
+
+    <!-- ================= MAIN CONTAINER ================= -->
+    <main class="container">
+
+        <!-- PRESET SAMPLES -->
+        <div class="presets-bar">
+            <span><i class="fa-solid fa-wand-magic-sparkles"></i> Quick Test with Sample Satellite Pairs:</span>
+            <div class="preset-buttons">
+                <button type="button" class="preset-btn" onclick="loadPresetPair('images/before image.png', 'images/after image.png', 'Satellite Observation Pair')">
+                    🛰 Satellite Urban Pair
+                </button>
+                <button type="button" class="preset-btn" onclick="loadPresetPair('images/img1.jpg', 'images/img2.jpg', 'Land Surface Pair')">
+                    🌍 Landscape Shift
+                </button>
+                <button type="button" class="preset-btn" onclick="loadPresetPair('images/flood1.jpg', 'images/flood2.jpg', 'Hydrological Shift')">
+                    🌊 Waterbody Shift
+                </button>
+            </div>
+        </div>
+
+        <!-- UPLOAD SECTION -->
+        <div class="upload-grid">
+
+            <!-- BEFORE IMAGE -->
+            <div class="upload-card" id="beforeDropZone">
+                <div class="card-head">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <h3>Baseline (Before) Image</h3>
+                </div>
+
+                <div class="preview-wrapper">
+                    <img id="beforePreview" src="images/before image.png" alt="Before Satellite Frame" onerror="this.src='https://placehold.co/400x250/0b1329/00e5ff?text=Before+Image'">
+                    <div id="beforeOverlay" class="drop-overlay"><i class="fa-solid fa-cloud-arrow-up"></i> Drop Before Image</div>
+                </div>
+
+                <div class="card-foot">
+                    <label class="btn-file">
+                        <i class="fa-solid fa-upload"></i> Choose Image
+                        <input type="file" id="beforeInput" accept="image/*" hidden>
+                    </label>
+                    <span id="beforeName" class="file-name">before image.png</span>
+                </div>
+            </div>
+
+            <!-- AFTER IMAGE -->
+            <div class="upload-card" id="afterDropZone">
+                <div class="card-head">
+                    <i class="fa-solid fa-clock"></i>
+                    <h3>Current (After) Image</h3>
+                </div>
+
+                <div class="preview-wrapper">
+                    <img id="afterPreview" src="images/after image.png" alt="After Satellite Frame" onerror="this.src='https://placehold.co/400x250/0b1329/00e5ff?text=After+Image'">
+                    <div id="afterOverlay" class="drop-overlay"><i class="fa-solid fa-cloud-arrow-up"></i> Drop After Image</div>
+                </div>
+
+                <div class="card-foot">
+                    <label class="btn-file">
+                        <i class="fa-solid fa-upload"></i> Choose Image
+                        <input type="file" id="afterInput" accept="image/*" hidden>
+                    </label>
+                    <span id="afterName" class="file-name">after image.png</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- METHOD SELECTION -->
+        <div class="method-panel">
+            <h3><i class="fa-solid fa-sliders"></i> Select Detection Algorithm:</h3>
+            <div class="method-options">
+                <label class="method-card active">
+                    <input type="radio" name="method" value="ai" checked>
+                    <div class="method-info">
+                        <strong>🤖 AI Multi-Scale SSIM</strong>
+                        <small>Deep structural difference & gradient contour clustering</small>
+                    </div>
+                </label>
+
+                <label class="method-card">
+                    <input type="radio" name="method" value="pixel">
+                    <div class="method-info">
+                        <strong>🛰 Absolute Pixel Difference</strong>
+                        <small>Direct RGB multi-band delta thresholding</small>
+                    </div>
+                </label>
+
+                <label class="method-card">
+                    <input type="radio" name="method" value="edge">
+                    <div class="method-info">
+                        <strong>📐 Edge & Morphological Boundary</strong>
+                        <small>Canny & Sobel spatial structural change detection</small>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- ACTION BUTTON & PROGRESS -->
+        <div class="action-area">
+            <button id="detectBtn" class="btn-detect" type="button">
+                <i class="fa-solid fa-satellite-dish"></i> Start AI Change Detection
+            </button>
+
+            <div id="progressContainer" class="progress-box" style="display: none;">
+                <div class="progress-bar-wrap">
+                    <div id="progressBar" class="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+                <p id="statusMessage" class="status-msg">Aligning satellite frames and computing differences...</p>
+            </div>
+        </div>
+
+        <!-- RESULTS SECTION -->
+        <section id="resultSection" class="results-section" style="display: none;">
+            <div class="results-header">
+                <h2><i class="fa-solid fa-chart-pie"></i> Change Detection Analysis Results</h2>
+                <div class="result-actions">
+                    <button id="downloadPdfBtn" class="btn-download" type="button">
+                        <i class="fa-solid fa-file-pdf"></i> Download PDF Report
+                    </button>
+                    <a href="reports.html" class="btn-view-all">
+                        <i class="fa-solid fa-list-check"></i> View All Reports
+                    </a>
+                </div>
+            </div>
+
+            <!-- KEY STATS CARDS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fa-solid fa-percent"></i>
+                    <h3 id="overallResult">0.00%</h3>
+                    <p>Overall Surface Change</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-cubes"></i>
+                    <h3 id="changedPixels">0</h3>
+                    <p>Changed Pixels Count</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-border-all"></i>
+                    <h3 id="totalPixels">0</h3>
+                    <p>Total Analyzed Pixels</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fa-solid fa-microchip"></i>
+                    <h3 id="methodResult">AI SSIM</h3>
+                    <p>Detection Algorithm</p>
+                </div>
+            </div>
+
+            <!-- CHANGE MAP & COMPARISON VIEWER -->
+            <div class="change-viewer">
+                <div class="viewer-tabs">
+                    <button type="button" class="tab-btn active" onclick="switchView('map')"><i class="fa-solid fa-fire"></i> AI Change Heatmap</button>
+                    <button type="button" class="tab-btn" onclick="switchView('after')"><i class="fa-solid fa-image"></i> After Frame</button>
+                    <button type="button" class="tab-btn" onclick="switchView('before')"><i class="fa-solid fa-clock-rotate-left"></i> Before Frame</button>
+                </div>
+
+                <div class="map-display-box">
+                    <img id="changeMap" src="" alt="Change Detection Heatmap">
+                    <img id="viewAfter" src="" alt="After Image" style="display: none;">
+                    <img id="viewBefore" src="" alt="Before Image" style="display: none;">
+                </div>
+                <p id="reportMessage" class="analysis-summary"></p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <p><i class="fa-solid fa-satellite"></i> Satellite AI Observation Systems &copy; 2026. All telemetry secured.</p>
+    </footer>
+
+    <!-- SCRIPT -->
+    <script>
+        const API_URL = "http://127.0.0.1:8000";
+        let beforeFileObj = null;
+        let afterFileObj = null;
+        let currentReportId = null;
+
+        const beforeInput = document.getElementById("beforeInput");
+        const afterInput = document.getElementById("afterInput");
+        const beforePreview = document.getElementById("beforePreview");
+        const afterPreview = document.getElementById("afterPreview");
+        const beforeName = document.getElementById("beforeName");
+        const afterName = document.getElementById("afterName");
+        const detectBtn = document.getElementById("detectBtn");
+        const progressContainer = document.getElementById("progressContainer");
+        const progressBar = document.getElementById("progressBar");
+        const statusMessage = document.getElementById("statusMessage");
+        const resultSection = document.getElementById("resultSection");
+        const overallResult = document.getElementById("overallResult");
+        const changedPixels = document.getElementById("changedPixels");
+        const totalPixels = document.getElementById("totalPixels");
+        const methodResult = document.getElementById("methodResult");
+        const changeMap = document.getElementById("changeMap");
+        const viewAfter = document.getElementById("viewAfter");
+        const viewBefore = document.getElementById("viewBefore");
+        const reportMessage = document.getElementById("reportMessage");
+        const downloadPdfBtn = document.getElementById("downloadPdfBtn");
+
+        // Sync username
+        const uName = localStorage.getItem("userName");
+        if (uName) document.getElementById("navUserName").textContent = uName;
+
+        // Method card radio styling
+        document.querySelectorAll(".method-card").forEach(card => {
+            card.addEventListener("click", () => {
+                document.querySelectorAll(".method-card").forEach(c => c.classList.remove("active"));
+                card.classList.add("active");
+                card.querySelector("input").checked = true;
+            });
+        });
+
+        // File change handlers
+        beforeInput.addEventListener("change", function () {
+            if (this.files && this.files[0]) {
+                beforeFileObj = this.files[0];
+                beforePreview.src = URL.createObjectURL(beforeFileObj);
+                beforeName.textContent = beforeFileObj.name;
+            }
+        });
+
+        afterInput.addEventListener("change", function () {
+            if (this.files && this.files[0]) {
+                afterFileObj = this.files[0];
+                afterPreview.src = URL.createObjectURL(afterFileObj);
+                afterName.textContent = afterFileObj.name;
+            }
+        });
+
+        // Quick Preset Loader
+        async function loadPresetPair(beforeSrc, afterSrc, pairName) {
+            try {
+                statusMessage.textContent = `Loading sample pair: ${pairName}...`;
+                beforePreview.src = beforeSrc;
+                afterPreview.src = afterSrc;
+                beforeName.textContent = beforeSrc;
+                afterName.textContent = afterSrc;
+
+                // Fetch blobs to populate File objects
+                const [bRes, aRes] = await Promise.all([fetch(beforeSrc), fetch(afterSrc)]);
+                const [bBlob, aBlob] = await Promise.all([bRes.blob(), aRes.blob()]);
+
+                beforeFileObj = new File([bBlob], beforeSrc, { type: bBlob.type || "image/png" });
+                afterFileObj = new File([aBlob], afterSrc, { type: aBlob.type || "image/png" });
+
+                statusMessage.textContent = `Sample pair loaded: ${pairName}. Click Start Detection!`;
+            } catch (err) {
+                console.error("Preset load error:", err);
+                // Fallback to direct fetch on execute
+            }
+        }
+
+        // Auto-load initial default sample pair on page start
+        window.addEventListener("DOMContentLoaded", () => {
+            loadPresetPair("images/before image.png", "images/after image.png", "Default Satellite Pair");
+        });
+
+        // Tab Switching
+        function switchView(tab) {
+            document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+            changeMap.style.display = "none";
+            viewAfter.style.display = "none";
+            viewBefore.style.display = "none";
+
+            if (tab === "map") {
+                changeMap.style.display = "block";
+                event.currentTarget.classList.add("active");
+            } else if (tab === "after") {
+                viewAfter.style.display = "block";
+                event.currentTarget.classList.add("active");
+            } else if (tab === "before") {
+                viewBefore.style.display = "block";
+                event.currentTarget.classList.add("active");
+            }
+        }
+
+        // Change Detection Trigger
+        detectBtn.addEventListener("click", async function () {
+            if (!beforeFileObj || !afterFileObj) {
+                // Try to resolve current preview sources
+                try {
+                    const [bRes, aRes] = await Promise.all([fetch(beforePreview.src), fetch(afterPreview.src)]);
+                    const [bBlob, aBlob] = await Promise.all([bRes.blob(), aRes.blob()]);
+                    beforeFileObj = new File([bBlob], "before_sample.png", { type: "image/png" });
+                    afterFileObj = new File([aBlob], "after_sample.png", { type: "image/png" });
+                } catch (e) {
+                    alert("Please select both Before and After satellite images.");
+                    return;
+                }
+            }
+
+            const method = document.querySelector('input[name="method"]:checked')?.value || "ai";
+
+            detectBtn.disabled = true;
+            detectBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing Multi-Spectral Difference...';
+            progressContainer.style.display = "block";
+            progressBar.style.width = "25%";
+            statusMessage.textContent = "Uploading frames to computer vision cluster...";
+
+            const formData = new FormData();
+            formData.append("before_image", beforeFileObj);
+            formData.append("after_image", afterFileObj);
+            formData.append("method", method);
+
+            try {
+                progressBar.style.width = "60%";
+                statusMessage.textContent = "Computing sub-pixel SSIM gradient tensors...";
+
+                const res = await fetch(`${API_URL}/change-detection`, {
+                    method: "POST",
+                    body: formData
+                });
+
+                progressBar.style.width = "90%";
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    progressBar.style.width = "100%";
+                    statusMessage.textContent = "AI Change Detection Complete!";
+                    currentReportId = data.report_id;
+
+                    overallResult.textContent = `${Number(data.overall_change).toFixed(2)}%`;
+                    changedPixels.textContent = Number(data.changed_pixels).toLocaleString();
+                    totalPixels.textContent = Number(data.total_pixels).toLocaleString();
+                    methodResult.textContent = (data.method || method).toUpperCase();
+
+                    changeMap.src = `${API_URL}/uploads/${data.change_map}`;
+                    viewAfter.src = `${API_URL}/uploads/${data.after_image}`;
+                    viewBefore.src = `${API_URL}/uploads/${data.before_image}`;
+
+                    reportMessage.innerHTML = `<strong>Autonomous Assessment:</strong> Detected surface structural shift of <strong>${data.overall_change}%</strong> across <strong>${Number(data.changed_pixels).toLocaleString()}</strong> pixel coordinates utilizing <em>${(data.method || method).toUpperCase()}</em> algorithm.`;
+
+                    resultSection.style.display = "block";
+                    resultSection.scrollIntoView({ behavior: "smooth" });
+                } else {
+                    throw new Error(data.detail || data.message || "Change detection failed.");
+                }
+            } catch (error) {
+                console.error("Change detection error:", error);
+                alert("Cannot connect to backend server or processing error:\n\n" + error.message);
+                statusMessage.textContent = "Processing failed. Ensure FastAPI is active.";
+            } finally {
+                detectBtn.disabled = false;
+                detectBtn.innerHTML = '<i class="fa-solid fa-satellite-dish"></i> Start AI Change Detection';
+            }
+        });
+
+        // Download PDF
+        downloadPdfBtn.addEventListener("click", () => {
+            if (!currentReportId) {
+                alert("Please perform an analysis first.");
+                return;
+            }
+            window.open(`${API_URL}/change-detection/report/${currentReportId}`, "_blank");
+        });
+    </script>
+    <script src="auth.js"></script>
+    <script src="ai-assistant.js"></script>
+</body>
+</html>

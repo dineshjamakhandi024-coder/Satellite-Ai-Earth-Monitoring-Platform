@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite AI | Aerospace Security Terminal & Intelligence Hub</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body>
+    <!-- Interactive Deep Space Starfield & Constellation Canvas -->
+    <canvas id="spaceCanvas"></canvas>
+
+    <!-- Ambient Glow Orbs -->
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+    <div class="ambient-orb orb-3"></div>
+
+    <!-- Background Grid Lines -->
+    <div class="space-grid"></div>
+
+    <!-- Top Aerospace Telemetry Navigation Bar -->
+    <header class="top-nav">
+        <a href="index.html" class="nav-brand">
+            <div class="brand-radar">
+                <i class="fa-solid fa-satellite"></i>
+                <span class="radar-ping"></span>
+            </div>
+            <div class="brand-info">
+                <h1>SATELLITE <span class="accent-text">AI</span></h1>
+                <small>EARTH OBSERVATION & AEROSPACE INTELLIGENCE</small>
+            </div>
+        </a>
+
+        <div class="nav-telemetry">
+            <div class="telemetry-chip live-chip">
+                <span class="pulse-dot"></span>
+                <span>LEO SATELLITE FLEET: <strong>24 ACTIVE</strong></span>
+            </div>
+            <div class="telemetry-chip">
+                <i class="fa-solid fa-clock"></i>
+                <span id="utcClock" class="font-mono">UTC 00:00:00</span>
+            </div>
+            <a href="index.html" class="btn-nav-portal" title="Public Planetary Portal">
+                <i class="fa-solid fa-globe"></i>
+                <span>Public Portal</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="login-wrapper">
+        <!-- LEFT HERO SHOWCASE PANEL -->
+        <section class="hero-showcase">
+            <div class="hero-badge">
+                <i class="fa-solid fa-microchip"></i>
+                <span>NEURAL COMPUTER VISION v2.5</span>
+            </div>
+
+            <h2 class="hero-title">
+                Global Planetary Intelligence & <br>
+                <span class="gradient-text">Multi-Spectral Earth Vision</span>
+            </h2>
+
+            <p class="hero-desc">
+                Access real-time orbital analytics, deep borehole geothermal metrics, automated flood/wildfire anomaly detection, and sub-meter multispectral satellite classification.
+            </p>
+
+            <!-- Holographic Radar & Satellite Telemetry Card -->
+            <div class="hologram-card">
+                <div class="holo-header">
+                    <div class="holo-title">
+                        <i class="fa-solid fa-satellite-dish"></i>
+                        <span>ORBITAL CONSTELLATION TELEMETRY</span>
+                    </div>
+                    <span class="holo-status font-mono">L-BAND SYNCED</span>
+                </div>
+
+                <div class="telemetry-grid">
+                    <div class="telemetry-item">
+                        <div class="item-icon"><i class="fa-solid fa-crosshairs"></i></div>
+                        <div class="item-data">
+                            <span class="item-label">PRIMARY ORBIT</span>
+                            <strong class="item-val font-mono">ISS 420 KM</strong>
+                        </div>
+                    </div>
+                    <div class="telemetry-item">
+                        <div class="item-icon"><i class="fa-solid fa-layer-group"></i></div>
+                        <div class="item-data">
+                            <span class="item-label">SPECTRAL BANDS</span>
+                            <strong class="item-val font-mono">13 (SENTINEL-2)</strong>
+                        </div>
+                    </div>
+                    <div class="telemetry-item">
+                        <div class="item-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div class="item-data">
+                            <span class="item-label">SECURITY PROTOCOL</span>
+                            <strong class="item-val font-mono">TLS 256 QUANTUM</strong>
+                        </div>
+                    </div>
+                    <div class="telemetry-item">
+                        <div class="item-icon"><i class="fa-solid fa-brain"></i></div>
+                        <div class="item-data">
+                            <span class="item-label">AI CONFIDENCE</span>
+                            <strong class="item-val font-mono">99.82% VERIFIED</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Radar Scanner Animation -->
+                <div class="radar-visual">
+                    <div class="radar-circle c1"></div>
+                    <div class="radar-circle c2"></div>
+                    <div class="radar-circle c3"></div>
+                    <div class="radar-sweep"></div>
+                    <div class="radar-sat sat-1" title="Sentinel-2A"></div>
+                    <div class="radar-sat sat-2" title="Landsat 9"></div>
+                    <div class="radar-sat sat-3" title="ISS"></div>
+                    <div class="radar-center">
+                        <i class="fa-solid fa-earth-americas"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick 1-Click Demo Card -->
+            <div class="demo-access-card">
+                <div class="demo-info">
+                    <div class="demo-avatar">
+                        <i class="fa-solid fa-user-astronaut"></i>
+                    </div>
+                    <div>
+                        <strong>Instant Analyst Demo Access</strong>
+                        <p>1-Click Auto-Fill (Dr. Sarah Connor - Chief Analyst)</p>
+                    </div>
+                </div>
+                <button type="button" class="btn-demo-quick" id="btnQuickDemo" onclick="fillDemoCredentials()">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>Quick Fill</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- RIGHT AUTHENTICATION CARD -->
+        <section class="auth-card-wrapper">
+            <div class="auth-glass-card" id="authGlassCard">
+                <!-- Card Glow Accents -->
+                <div class="card-glow-edge"></div>
+
+                <!-- Auth Card Header -->
+                <div class="card-header">
+                    <div class="header-icon">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <div class="header-text">
+                        <h3 id="authTitle">Terminal Authorization</h3>
+                        <p id="authSubtitle">Authenticate credentials to establish telemetry link</p>
+                    </div>
+                </div>
+
+                <!-- Tab Switcher -->
+                <div class="auth-tabs">
+                    <button type="button" class="tab-btn active" id="tabLogin" onclick="switchAuthTab('login')">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Sign In</span>
+                    </button>
+                    <button type="button" class="tab-btn" id="tabRegister" onclick="switchAuthTab('register')">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Create Account</span>
+                    </button>
+                    <div class="tab-slider" id="tabSlider"></div>
+                </div>
+
+                <!-- ==============================================
+                     1. SIGN IN FORM
+                =============================================== -->
+                <form id="loginForm" class="auth-form active" onsubmit="return loginUser(event)">
+                    <div class="input-group">
+                        <label for="email">
+                            <i class="fa-solid fa-envelope"></i>
+                            <span>Email or Operator ID</span>
+                        </label>
+                        <div class="input-field">
+                            <i class="fa-solid fa-user-astronaut field-icon"></i>
+                            <input type="email" id="email" placeholder="e.g. analyst@satellite.ai" autocomplete="email" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="password">
+                            <i class="fa-solid fa-lock"></i>
+                            <span>Security Password</span>
+                        </label>
+                        <div class="input-field">
+                            <i class="fa-solid fa-key field-icon"></i>
+                            <input type="password" id="password" placeholder="••••••••••••" autocomplete="current-password" required>
+                            <button type="button" class="btn-toggle-pwd" onclick="togglePassword('password', this)" title="Show/Hide Password">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-row-options">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" id="rememberMe" checked>
+                            <span class="checkmark"></span>
+                            <span class="cb-label">Remember Terminal</span>
+                        </label>
+
+                        <button type="button" class="btn-link-forgot" onclick="openForgotModal()">
+                            Forgot Password?
+                        </button>
+                    </div>
+
+                    <button type="submit" class="btn-auth-primary" id="loginButton">
+                        <span class="btn-content">
+                            <i class="fa-solid fa-rocket"></i>
+                            <span>Authorize & Enter Platform</span>
+                        </span>
+                        <div class="btn-glow"></div>
+                    </button>
+
+                    <!-- Fast Demo Auto-Fill Trigger -->
+                    <div class="quick-demo-pill" onclick="fillDemoCredentials()">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Demo Account: <strong>demo@satellite.ai</strong> (Click to auto-load)</span>
+                    </div>
+                </form>
+
+                <!-- ==============================================
+                     2. REGISTER FORM
+                =============================================== -->
+                <form id="registerForm" class="auth-form" onsubmit="return registerUser(event)">
+                    <div class="input-group">
+                        <label for="registerName">
+                            <i class="fa-solid fa-id-badge"></i>
+                            <span>Full Name / Operator Call-Sign</span>
+                        </label>
+                        <div class="input-field">
+                            <i class="fa-solid fa-user field-icon"></i>
+                            <input type="text" id="registerName" placeholder="e.g. Dr. Alex Vance" autocomplete="name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-dual-grid">
+                        <div class="input-group">
+                            <label for="registerEmail">
+                                <i class="fa-solid fa-envelope"></i>
+                                <span>Official Email</span>
+                            </label>
+                            <div class="input-field">
+                                <i class="fa-solid fa-at field-icon"></i>
+                                <input type="email" id="registerEmail" placeholder="name@agency.gov" autocomplete="email" required>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="registerRole">
+                                <i class="fa-solid fa-shield"></i>
+                                <span>Mission Role</span>
+                            </label>
+                            <div class="input-field select-field">
+                                <i class="fa-solid fa-satellite field-icon"></i>
+                                <select id="registerRole">
+                                    <option value="Satellite Analyst" selected>Satellite Analyst</option>
+                                    <option value="Climate Researcher">Climate Researcher</option>
+                                    <option value="Disaster Responder">Disaster Responder</option>
+                                    <option value="Geospatial Engineer">Geospatial Engineer</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="registerMobile">
+                            <i class="fa-solid fa-tower-broadcast"></i>
+                            <span>Satellite Comms / Mobile (Optional)</span>
+                        </label>
+                        <div class="input-field">
+                            <i class="fa-solid fa-phone field-icon"></i>
+                            <input type="tel" id="registerMobile" placeholder="+1 (555) 019-2834" autocomplete="tel">
+                        </div>
+                    </div>
+
+                    <div class="form-dual-grid">
+                        <div class="input-group">
+                            <label for="registerPassword">
+                                <i class="fa-solid fa-lock"></i>
+                                <span>Password</span>
+                            </label>
+                            <div class="input-field">
+                                <i class="fa-solid fa-key field-icon"></i>
+                                <input type="password" id="registerPassword" placeholder="Min 6 chars" autocomplete="new-password" oninput="checkPasswordStrength(this.value)" required>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="confirmPassword">
+                                <i class="fa-solid fa-lock-open"></i>
+                                <span>Confirm Password</span>
+                            </label>
+                            <div class="input-field">
+                                <i class="fa-solid fa-check-double field-icon"></i>
+                                <input type="password" id="confirmPassword" placeholder="Repeat password" autocomplete="new-password" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Password Strength Meter -->
+                    <div class="pwd-strength-bar" id="pwdStrengthBar">
+                        <div class="strength-fill" id="strengthFill"></div>
+                        <span class="strength-label font-mono" id="strengthLabel">Security: Enter password</span>
+                    </div>
+
+                    <label class="custom-checkbox terms-checkbox">
+                        <input type="checkbox" id="termsCheck" required checked>
+                        <span class="checkmark"></span>
+                        <span class="cb-label">I accept the Aerospace Earth Monitoring & Data Security Clearance</span>
+                    </label>
+
+                    <button type="submit" class="btn-auth-primary" id="registerButton">
+                        <span class="btn-content">
+                            <i class="fa-solid fa-user-check"></i>
+                            <span>Register & Generate Clearance</span>
+                        </span>
+                        <div class="btn-glow"></div>
+                    </button>
+                </form>
+
+                <!-- Card Footer Security Badges -->
+                <div class="card-footer-badges">
+                    <div class="badge-item">
+                        <i class="fa-solid fa-lock"></i>
+                        <span>End-To-End Encrypted</span>
+                    </div>
+                    <div class="badge-item">
+                        <i class="fa-solid fa-satellite"></i>
+                        <span>NASA / ESA Sentinel Sync</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Security & Status Bar -->
+    <footer class="bottom-bar">
+        <div class="bottom-item">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>ISO 27001 & SOC-2 Type II Certified Aerospace Infrastructure</span>
+        </div>
+        <div class="bottom-item">
+            <i class="fa-solid fa-signal"></i>
+            <span>Telemetry Latency: <strong class="font-mono" style="color:var(--cyan-neon)">18ms</strong></span>
+        </div>
+        <div class="bottom-item">
+            <i class="fa-solid fa-network-wired"></i>
+            <span>FastAPI Cluster: <strong class="font-mono" id="backendStatusText" style="color:var(--emerald-neon)">CONNECTED</strong></span>
+        </div>
+    </footer>
+
+    <!-- ==============================================
+         FORGOT PASSWORD GLASS MODAL
+    =============================================== -->
+    <div class="modal-backdrop" id="forgotModal">
+        <div class="modal-glass-card">
+            <button type="button" class="modal-close-btn" onclick="closeForgotModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="modal-icon">
+                <i class="fa-solid fa-key"></i>
+            </div>
+
+            <h3>Terminal Recovery</h3>
+            <p>Enter your registered agency email address. We will dispatch encrypted password recovery instructions.</p>
+
+            <form id="forgotForm" onsubmit="return handleForgotPassword(event)">
+                <div class="input-group" style="margin: 18px 0;">
+                    <div class="input-field">
+                        <i class="fa-solid fa-envelope field-icon"></i>
+                        <input type="email" id="forgotEmail" placeholder="registered@agency.com" required>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-modal-cancel" onclick="closeForgotModal()">Cancel</button>
+                    <button type="submit" class="btn-auth-primary" id="btnForgotSubmit" style="height:44px;">
+                        <span>Send Recovery Dispatch</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==============================================
+         ACCESS GRANTED HUD FULLSCREEN OVERLAY
+    =============================================== -->
+    <div class="access-granted-hud" id="accessGrantedHud">
+        <div class="hud-center-box">
+            <div class="hud-radar-scan">
+                <i class="fa-solid fa-shield-check"></i>
+            </div>
+            <h2 class="hud-status font-mono">ACCESS GRANTED</h2>
+            <p class="hud-subtitle font-mono">SECURITY CLEARANCE LEVEL 5 VERIFIED</p>
+
+            <div class="hud-terminal-log font-mono" id="hudTerminalLog">
+                <div>> INITIATING QUANTUM HANDSHAKE... [OK]</div>
+                <div>> DECRYPTING ORBITAL TELEMETRY STREAMS... [OK]</div>
+                <div>> SYNCHRONIZING SENTINEL-2 & LANDSAT FEEDS... [OK]</div>
+                <div>> LAUNCHING PLANETARY COMMAND HUB...</div>
+            </div>
+
+            <div class="hud-progress-bar">
+                <div class="hud-progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification System -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="login.js"></script>
+</body>
+
+</html>

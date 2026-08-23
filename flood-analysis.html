@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite AI | Flood Disaster Analysis</title>
+
+    <link rel="stylesheet" href="flood-analysis.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <header class="top-nav">
+        <div class="nav-brand">
+            <a href="index.html" class="brand-link">
+                <i class="fa-solid fa-satellite"></i>
+                <div>
+                    <h2>Satellite AI</h2>
+                    <small>Flood Disaster Monitoring Center</small>
+                </div>
+            </a>
+        </div>
+
+        <ul class="nav-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Home</a></li>
+            <li><a href="earth.html"><i class="fa-solid fa-globe"></i> 3D Earth</a></li>
+            <li><a href="change-detection.html"><i class="fa-solid fa-arrows-rotate"></i> Change Detection</a></li>
+            <li><a href="urban-growth.html"><i class="fa-solid fa-city"></i> Urban Growth</a></li>
+            <li><a href="forest-monitoring.html"><i class="fa-solid fa-tree"></i> Forest</a></li>
+            <li><a href="flood-analysis.html" class="active"><i class="fa-solid fa-water"></i> Flood</a></li>
+            <li><a href="climate-monitoring.html"><i class="fa-solid fa-cloud-sun"></i> Climate</a></li>
+            <li><a href="disaster-alerts.html"><i class="fa-solid fa-triangle-exclamation"></i> Alerts</a></li>
+            <li><a href="reports.html"><i class="fa-solid fa-file-lines"></i> Reports</a></li>
+            <li><a href="dashboard.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <div class="live-status">
+                <span class="live-dot"></span> LIVE
+            </div>
+            <div class="clock">
+                <i class="fa-solid fa-clock"></i>
+                <span id="utcClock">UTC 00:00:00</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= HERO ================= -->
+    <section class="hero">
+        <span class="badge"><i class="fa-solid fa-shield-halved"></i> Synthetic-Aperture Radar & Optical Hydrology</span>
+        <h1>🌊 AI Flood Detection & Inundation Mapping</h1>
+        <p>
+            Compare multi-temporal satellite observations to detect water spread expansion, inundation depth, damaged infrastructure, and emergency rescue priority zones.
+        </p>
+    </section>
+
+    <!-- ================= MAIN CONTAINER ================= -->
+    <main class="container">
+
+        <!-- PRESET SAMPLES -->
+        <div class="presets-bar">
+            <span><i class="fa-solid fa-wand-magic-sparkles"></i> Quick Test with Bundled Flood Datasets:</span>
+            <div class="preset-buttons">
+                <button type="button" class="preset-btn" onclick="loadFloodPreset('images/flood1.jpg', 'images/flood2.jpg', 'Kerala River Basin')">
+                    🌊 Kerala Inundation
+                </button>
+                <button type="button" class="preset-btn" onclick="loadFloodPreset('images/flood3.jpg', 'images/flood4.jpg', 'Coastal Surge Zone')">
+                    🌧 Coastal Delta
+                </button>
+                <button type="button" class="preset-btn" onclick="loadFloodPreset('images/flood5.jpg', 'images/flood6.png', 'Urban Flood Zone')">
+                    🏙 Urban Inundation
+                </button>
+            </div>
+        </div>
+
+        <!-- UPLOAD SECTION -->
+        <section class="upload-section">
+            <div class="upload-card">
+                <div class="card-icon"><i class="fa-solid fa-cloud-showers-water"></i></div>
+                <h2>Pre-Flood Baseline Image</h2>
+                <p>Satellite observation prior to flooding</p>
+                <div class="preview-box">
+                    <img id="beforeFloodPreview" src="images/flood1.jpg" alt="Before Flood Image" onerror="this.src='https://placehold.co/400x240/0b1329/00e5ff?text=Before+Flood'">
+                </div>
+                <label class="upload-btn">
+                    <i class="fa-solid fa-upload"></i> Choose Pre-Flood Image
+                    <input type="file" id="beforeFloodInput" accept="image/*" hidden>
+                </label>
+                <span id="beforeFloodName" class="file-name">flood1.jpg</span>
+            </div>
+
+            <div class="upload-card">
+                <div class="card-icon"><i class="fa-solid fa-water"></i></div>
+                <h2>Post-Flood Peak Inundation</h2>
+                <p>Latest active flood satellite image</p>
+                <div class="preview-box">
+                    <img id="afterFloodPreview" src="images/flood2.jpg" alt="After Flood Image" onerror="this.src='https://placehold.co/400x240/0b1329/00e5ff?text=After+Flood'">
+                </div>
+                <label class="upload-btn">
+                    <i class="fa-solid fa-upload"></i> Choose Post-Flood Image
+                    <input type="file" id="afterFloodInput" accept="image/*" hidden>
+                </label>
+                <span id="afterFloodName" class="file-name">flood2.jpg</span>
+            </div>
+        </section>
+
+        <!-- ANALYZE BUTTON -->
+        <section class="detect-area">
+            <button id="analyzeFloodBtn" class="detect-btn" type="button">
+                <i class="fa-solid fa-satellite-dish"></i> Analyze Flood Damage
+            </button>
+        </section>
+
+        <!-- AI SCANNING ANIMATION -->
+        <section id="scannerBox" class="scanner" style="display: none;">
+            <div class="scanner-box">
+                <i class="fa-solid fa-satellite-dish fa-spin"></i>
+                <h2>AI Multi-Spectral Flood Scanning</h2>
+                <div class="scan-line"></div>
+                <p id="scannerStatus">Isolating water body reflectance and computing water spread mask...</p>
+            </div>
+        </section>
+
+        <!-- RESULTS SECTION -->
+        <div id="floodResultsSection" class="results-wrapper" style="display: none;">
+
+            <!-- FLOOD METRIC CARDS -->
+            <section class="results-grid">
+                <div class="result-card">
+                    <i class="fa-solid fa-water"></i>
+                    <h2>Flood Water Coverage</h2>
+                    <h1 id="resFloodCoverage">0.0%</h1>
+                    <span class="badge-danger">Active Inundation</span>
+                </div>
+
+                <div class="result-card">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    <h2>Estimated Flood Depth</h2>
+                    <h1 id="resFloodDepth">0.0 m</h1>
+                    <span class="badge-warning">Severe Level</span>
+                </div>
+
+                <div class="result-card">
+                    <i class="fa-solid fa-cloud-rain"></i>
+                    <h2>Accumulated Rainfall</h2>
+                    <h1 id="resRainfall">0 mm</h1>
+                    <span class="badge-info">Torrential Monsoon</span>
+                </div>
+
+                <div class="result-card">
+                    <i class="fa-solid fa-house-chimney-crack"></i>
+                    <h2>Damaged Structures</h2>
+                    <h1 id="resBuildings">0</h1>
+                    <span class="badge-danger">Impacted Buildings</span>
+                </div>
+
+                <div class="result-card">
+                    <i class="fa-solid fa-users"></i>
+                    <h2>Population Affected</h2>
+                    <h1 id="resPopulation">0</h1>
+                    <span class="badge-critical">High Rescue Priority</span>
+                </div>
+
+                <div class="result-card">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <h2>Severity Rating</h2>
+                    <h1 id="resSeverity">Critical</h1>
+                    <span class="badge-danger">Emergency Class A</span>
+                </div>
+            </section>
+
+            <!-- SATELLITE IMAGE COMPARISON & FLOOD HEATMAP -->
+            <section class="comparison">
+                <h2><i class="fa-solid fa-earth-americas"></i> Satellite Inundation Mapping</h2>
+                <div class="comparison-container">
+                    <div class="compare-card">
+                        <h3><i class="fa-solid fa-clock-rotate-left"></i> Before Flood Baseline</h3>
+                        <img id="compBefore" src="images/flood1.jpg" alt="Before Flood">
+                    </div>
+                    <div class="compare-card">
+                        <h3><i class="fa-solid fa-clock"></i> Post-Flood Satellite Frame</h3>
+                        <img id="compAfter" src="images/flood2.jpg" alt="After Flood">
+                    </div>
+                    <div class="compare-card">
+                        <h3><i class="fa-solid fa-fire"></i> AI Flood Extent Mask</h3>
+                        <img id="compMap" src="" alt="Flood Extent Map">
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEVERITY ASSESSMENT BARS -->
+            <section class="severity">
+                <h2>🚨 Quantitative Disaster Severity Assessment</h2>
+                <div class="severity-box">
+                    <div class="severity-item">
+                        <span>Flood Inundation Level</span>
+                        <div class="bar-track"><div id="barFloodLevel" class="bar-fill red" style="width: 85%;"></div></div>
+                        <strong id="valFloodLevel">85%</strong>
+                    </div>
+                    <div class="severity-item">
+                        <span>Infrastructure Damage Index</span>
+                        <div class="bar-track"><div id="barDamage" class="bar-fill orange" style="width: 78%;"></div></div>
+                        <strong id="valDamage">78%</strong>
+                    </div>
+                    <div class="severity-item">
+                        <span>Rescue Urgency Priority</span>
+                        <div class="bar-track"><div id="barRescue" class="bar-fill crimson" style="width: 96%;"></div></div>
+                        <strong id="valRescue">96%</strong>
+                    </div>
+                </div>
+            </section>
+
+            <!-- AI RECOMMENDATION -->
+            <section class="recommendation">
+                <h2>🤖 AI Emergency Tactical Directives</h2>
+                <div class="recommend-box">
+                    <p><i class="fa-solid fa-circle-check text-green"></i> <strong>Evacuation:</strong> Immediate evacuation ordered for lowland floodplain sectors along river delta.</p>
+                    <p><i class="fa-solid fa-circle-check text-green"></i> <strong>Amphibious Response:</strong> Dispatch motorized rescue boats and flood barrier teams to northern perimeter.</p>
+                    <p><i class="fa-solid fa-circle-check text-green"></i> <strong>Medical Dispatch:</strong> Airdrop emergency drinking water and first-aid kits to designated high-ground camps.</p>
+                    <p><i class="fa-solid fa-circle-check text-green"></i> <strong>Continuous Telemetry:</strong> SAR satellite orbital passes scheduled every 30 minutes for real-time tracking.</p>
+                </div>
+            </section>
+
+            <!-- DOWNLOAD REPORT -->
+            <section class="download-section">
+                <button id="downloadFloodPdfBtn" class="download-btn" type="button">
+                    <i class="fa-solid fa-file-pdf"></i> Download Official Flood Disaster Report
+                </button>
+                <a href="reports.html" class="reports-link-btn">
+                    <i class="fa-solid fa-folder-open"></i> Open Reports Archive
+                </a>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-left">
+            <i class="fa-solid fa-satellite"></i> Satellite AI Flood Monitoring & Emergency Operations
+        </div>
+        <div class="footer-right">
+            &copy; 2026 Disaster Monitoring Center. All orbital telemetry live.
+        </div>
+    </footer>
+
+    <script src="flood-analysis.js"></script>
+    <script src="auth.js"></script>
+    <script src="ai-assistant.js"></script>
+</body>
+</html>
