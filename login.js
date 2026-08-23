@@ -2,7 +2,7 @@
 // SATELLITE AI - AEROSPACE AUTHENTICATION & INTERACTIVE ENGINE
 // ============================================================
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") ? "http://127.0.0.1:8000" : "https://satellite-ai-backend.onrender.com";
 
 // ============================================================
 // 1. INITIALIZATION ON DOM LOAD

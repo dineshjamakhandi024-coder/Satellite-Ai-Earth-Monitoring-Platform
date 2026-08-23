@@ -5,7 +5,7 @@
 async function askSatelliteAI(command) {
     try {
         const response = await fetch(
-            "http://127.0.0.1:8000/ai-assistant?command=" +
+            ((window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") ? "http://127.0.0.1:8000" : "https://satellite-ai-backend.onrender.com") + "/ai-assistant?command=" +
             encodeURIComponent(command)
         );
 

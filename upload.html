@@ -590,7 +590,7 @@ compareBtn.addEventListener("click", async function (event) {
 
         const response =
             await fetch(
-                "http://127.0.0.1:8000/upload-images",
+                ((window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") ? "http://127.0.0.1:8000" : "https://satellite-ai-backend.onrender.com") + "/upload-images",
                 {
                     method: "POST",
                     body: formData

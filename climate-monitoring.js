@@ -5,7 +5,7 @@
 
 "use strict";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") ? "http://127.0.0.1:8000" : "https://satellite-ai-backend.onrender.com";
 
 let currentTempUnit = "C"; // 'C' or 'F'
 let currentGraphMetric = "humidity"; // 'humidity', 'temperature', 'precipitation', 'wind'
