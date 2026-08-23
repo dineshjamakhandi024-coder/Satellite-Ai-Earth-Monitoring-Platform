@@ -11,6 +11,7 @@
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -488,116 +489,236 @@
 
 
 <!-- =========================================================
-     SATELLITE AI VOICE ASSISTANT
+     SATELLITE AI ASSISTANT & REAL-TIME CHART BOT
 ========================================================= -->
 
-<div id="voiceAssistant"
-     class="voice-assistant">
+<div class="ai-assistant-wrapper">
 
-
-    <!-- AI HEADER -->
-
-    <div class="voice-header">
-
-        <div class="voice-title">
-
+    <!-- FLOATING AI TRIGGER BUTTON -->
+    <button class="ai-button floating-ai-trigger" id="aiChatLauncher" onclick="openAI()" title="Open Satellite AI & Chart Bot">
+        <div class="ai-trigger-pulse"></div>
+        <div class="ai-trigger-icon">
             <i class="fa-solid fa-robot"></i>
-
-            <strong>Satellite AI</strong>
-
         </div>
-
-
-        <button id="closeVoiceButton"
-                type="button"
-                class="voice-close"
-                title="Close">
-
-            <i class="fa-solid fa-xmark"></i>
-
-        </button>
-
-    </div>
-
-
-    <!-- AI MESSAGE -->
-
-    <div id="voiceMessage"
-         class="voice-message">
-
-        Hello! 👋 I'm Satellite AI.
-        I can help you monitor your satellite analysis
-        and control this dashboard using your voice.
-
-    </div>
-
-
-    <!-- AI STATUS -->
-
-    <div id="voiceStatus"
-         class="voice-status">
-
-        Ready
-
-    </div>
-
-
-    <!-- MICROPHONE -->
-
-    <button id="startVoiceButton"
-            class="voice-mic-button"
-            type="button">
-
-        <i class="fa-solid fa-microphone"></i>
-
-        <span>Start Voice Assistant</span>
-
+        <span class="ai-trigger-text">AI & Charts</span>
     </button>
 
+    <!-- AI ASSISTANT & CHART BOT DRAWER -->
+    <div class="ai-chat-drawer" id="aiChatDrawer">
 
-    <!-- COMMAND HELP -->
+        <!-- HEADER -->
+        <div class="ai-chat-header">
+            <div class="ai-header-brand">
+                <div class="ai-bot-avatar">
+                    <i class="fa-solid fa-satellite-dish"></i>
+                    <span class="avatar-status-dot"></span>
+                </div>
+                <div class="ai-header-info">
+                    <div class="ai-title-row">
+                        <h3>Satellite AI Assistant</h3>
+                        <span class="ai-badge-live"><i class="fa-solid fa-circle fa-beat"></i> Online</span>
+                    </div>
+                    <small id="aiVoiceStatus">Natural Language & Live Chart Bot</small>
+                </div>
+            </div>
 
-    <div class="voice-help">
+            <!-- MODE SWITCH TABS -->
+            <div class="ai-view-tabs">
+                <button type="button" class="ai-tab-btn active" id="tabBtnChat" onclick="AIAssistant.switchTab('chat')">
+                    <i class="fa-solid fa-comments"></i>
+                    <span>Chat</span>
+                </button>
+                <button type="button" class="ai-tab-btn" id="tabBtnCharts" onclick="AIAssistant.switchTab('charts')">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Chart Bot</span>
+                </button>
+            </div>
 
-        <p>Try saying:</p>
+            <!-- HEADER TOOLS -->
+            <div class="ai-header-tools">
+                <button type="button" class="btn-ai-tool btn-ai-mic" onclick="AIAssistant.toggleVoiceRecognition()" title="Voice Command Mic">
+                    <i class="fa-solid fa-microphone"></i>
+                </button>
+                <button type="button" class="btn-ai-tool" id="aiVoiceToggleBtn" onclick="AIAssistant.toggleVoiceFeedback()" title="Toggle Voice Audio Feedback">
+                    <i class="fa-solid fa-volume-high"></i>
+                </button>
+                <button type="button" class="btn-ai-tool" id="aiExpandBtn" onclick="AIAssistant.toggleExpand()" title="Toggle Expand View">
+                    <i class="fa-solid fa-expand"></i>
+                </button>
+                <button type="button" class="btn-ai-tool close" onclick="closeAI()" title="Close Assistant">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
 
-        <span>"Open reports"</span>
-        <span>"Open urban growth"</span>
-        <span>"Open change detection"</span>
-        <span>"Refresh dashboard"</span>
+        <!-- AUDIO WAVEFORM VISUALIZER -->
+        <div class="ai-audio-waveform" id="aiAudioWaveform" style="display:none;">
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <span>Listening for voice command...</span>
+        </div>
+
+        <!-- ================= TAB 1: AI CHAT ================= -->
+        <div class="ai-tab-content active" id="aiTabChat">
+            <!-- Messages Stream -->
+            <div class="ai-chat-messages" id="aiChatMessages">
+                <div class="chat-msg assistant">
+                    <div class="msg-avatar"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div class="msg-bubble">
+                        <div class="msg-text">
+                            ✨ Hello! I'm your <strong>Satellite AI Assistant & Chart Bot</strong>. 🛰️
+                            <p style="margin:6px 0 6px 0;">I can generate interactive telemetry charts, answer satellite observation questions, or control this dashboard:</p>
+                            <div class="welcome-guide-grid">
+                                <div class="guide-item" onclick="AIAssistant.handleQuickChip('📊 Show Forest Chart')">
+                                    <i class="fa-solid fa-tree"></i> <strong>Chart Bot</strong>: "Show forest chart" / "Plot urban growth"
+                                </div>
+                                <div class="guide-item" onclick="AIAssistant.handleQuickChip('🛰️ Track ISS Station')">
+                                    <i class="fa-solid fa-satellite"></i> <strong>Orbit Telemetry</strong>: "Track ISS" / "Sentinel-2 specs"
+                                </div>
+                                <div class="guide-item" onclick="AIAssistant.handleQuickChip('📍 Weather in Tokyo')">
+                                    <i class="fa-solid fa-cloud-sun"></i> <strong>Live Weather</strong>: "Weather in Tokyo / London / Paris"
+                                </div>
+                                <div class="guide-item" onclick="AIAssistant.handleQuickChip('🚀 Launch 3D Earth')">
+                                    <i class="fa-solid fa-globe"></i> <strong>Navigation</strong>: "Open 3D Earth" / "Open Reports"
+                                </div>
+                            </div>
+                        </div>
+                        <span class="msg-time">Ready</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Action Prompt Chips -->
+            <div class="ai-quick-chips-wrapper">
+                <div class="ai-quick-chips" id="aiQuickChips"></div>
+            </div>
+
+            <!-- Input Bar with Mic & Send -->
+            <form class="ai-chat-input-bar" id="aiChatForm">
+                <button type="button" class="btn-ai-mic" onclick="AIAssistant.toggleVoiceRecognition()" title="Hold/Click to Speak">
+                    <i class="fa-solid fa-microphone"></i>
+                </button>
+                <input type="text" id="aiChatInput" placeholder="Ask AI or say 'Show forest chart', 'Plot urban growth'..." autocomplete="off">
+                <button type="submit" class="btn-ai-send" title="Send Query">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- ================= TAB 2: CHART BOT & VISUALIZER ================= -->
+        <div class="ai-tab-content" id="aiTabCharts">
+            
+            <!-- Module Selection Pills -->
+            <div class="chartbot-modules-nav">
+                <button type="button" class="module-tab-btn active" data-module="forest" onclick="AIAssistant.selectChartModule('forest')">
+                    <i class="fa-solid fa-tree"></i> Forest
+                </button>
+                <button type="button" class="module-tab-btn" data-module="urban" onclick="AIAssistant.selectChartModule('urban')">
+                    <i class="fa-solid fa-city"></i> Urban
+                </button>
+                <button type="button" class="module-tab-btn" data-module="flood" onclick="AIAssistant.selectChartModule('flood')">
+                    <i class="fa-solid fa-water"></i> Flood
+                </button>
+                <button type="button" class="module-tab-btn" data-module="climate" onclick="AIAssistant.selectChartModule('climate')">
+                    <i class="fa-solid fa-temperature-high"></i> Climate
+                </button>
+                <button type="button" class="module-tab-btn" data-module="fleet" onclick="AIAssistant.selectChartModule('fleet')">
+                    <i class="fa-solid fa-satellite"></i> Fleet
+                </button>
+                <button type="button" class="module-tab-btn" data-module="overview" onclick="AIAssistant.selectChartModule('overview')">
+                    <i class="fa-solid fa-chart-pie"></i> Overview
+                </button>
+            </div>
+
+            <!-- Chart Toolbar (Chart Type & Actions) -->
+            <div class="chartbot-toolbar">
+                <div class="chart-type-selector">
+                    <button type="button" class="chart-type-btn active" data-type="bar" onclick="AIAssistant.changeChartType('bar')" title="Bar Chart">
+                        <i class="fa-solid fa-chart-column"></i> Bar
+                    </button>
+                    <button type="button" class="chart-type-btn" data-type="line" onclick="AIAssistant.changeChartType('line')" title="Line Chart">
+                        <i class="fa-solid fa-chart-line"></i> Line
+                    </button>
+                    <button type="button" class="chart-type-btn" data-type="doughnut" onclick="AIAssistant.changeChartType('doughnut')" title="Donut Chart">
+                        <i class="fa-solid fa-chart-pie"></i> Donut
+                    </button>
+                    <button type="button" class="chart-type-btn" data-type="radar" onclick="AIAssistant.changeChartType('radar')" title="Radar Chart">
+                        <i class="fa-solid fa-circle-nodes"></i> Radar
+                    </button>
+                </div>
+
+                <div class="chart-actions">
+                    <button type="button" class="btn-live-stream active" id="btnLiveStream" onclick="AIAssistant.toggleLiveStream()" title="Toggle Live Telemetry Stream">
+                        <span class="live-dot-pulse"></span>
+                        <span id="liveStreamText">LIVE TELEMETRY</span>
+                    </button>
+                    <button type="button" class="btn-chart-action" onclick="AIAssistant.exportChartSnapshot()" title="Save Chart Image">
+                        <i class="fa-solid fa-camera"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Key Telemetry Metrics Row -->
+            <div class="chartbot-metrics-grid">
+                <div class="metric-card">
+                    <span class="metric-lbl" id="metric1Label">Canopy Loss Index</span>
+                    <strong class="metric-val" id="metric1Value">-4.2%</strong>
+                    <small class="metric-trend positive" id="metric1Trend"><i class="fa-solid fa-arrow-trend-down"></i> Improving</small>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-lbl" id="metric2Label">AI Confidence</span>
+                    <strong class="metric-val" id="metric2Value">98.6%</strong>
+                    <small class="metric-trend" id="metric2Trend"><i class="fa-solid fa-shield-check"></i> High Precision</small>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-lbl" id="metric3Label">Monitored Extent</span>
+                    <strong class="metric-val" id="metric3Value">14,280 km²</strong>
+                    <small class="metric-trend" id="metric3Trend"><i class="fa-solid fa-vector-square"></i> Real-time</small>
+                </div>
+                <div class="metric-card">
+                    <span class="metric-lbl" id="metric4Label">Telemetry Sensors</span>
+                    <strong class="metric-val" id="metric4Value">Multispectral + SAR</strong>
+                    <small class="metric-trend" id="metric4Trend"><i class="fa-solid fa-tower-broadcast"></i> Synchronized</small>
+                </div>
+            </div>
+
+            <!-- Chart Canvas Container -->
+            <div class="chart-canvas-container">
+                <canvas id="aiChartCanvas"></canvas>
+            </div>
+
+            <!-- AI Insight & Deep Analysis Box -->
+            <div class="chartbot-insight-box">
+                <div class="insight-header">
+                    <div class="insight-title">
+                        <i class="fa-solid fa-sparkles"></i>
+                        <strong id="chartInsightTitle">AI Forest Canopy Analysis & Anomaly Report</strong>
+                    </div>
+                    <button type="button" class="btn-ask-ai" onclick="AIAssistant.askAboutCurrentChart()">
+                        <i class="fa-solid fa-comments"></i> Ask AI
+                    </button>
+                </div>
+                <p id="chartInsightBody">
+                    Vegetation health index (NDVI) across primary target zones indicates stabilization. Afforestation projects gained +8,400 hectares this quarter while illegal deforestation alerts dropped by 12.4%.
+                </p>
+            </div>
+
+        </div>
 
     </div>
 
 </div>
 
-
-
-<!-- FLOATING AI BUTTON -->
-
-<button id="openVoiceButton"
-        class="floating-ai-button"
-        type="button"
-        title="Open Satellite AI">
-
-    <i class="fa-solid fa-robot"></i>
-
-</button>
-
-
-
 <!-- =========================================================
      JAVASCRIPT
 ========================================================= -->
 
-<!-- IMPORTANT:
-     Only ONE dashboard.js.
-     Do not put another dashboard JavaScript block here.
--->
-
 <script src="dashboard.js"></script>
-
 <script src="auth.js"></script>
-
+<script src="ai-assistant.js"></script>
 
 </body>
 </html>
