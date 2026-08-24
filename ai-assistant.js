@@ -230,6 +230,21 @@ const AIAssistant = {
     },
 
     ensureDOMStructure() {
+        // 1. Auto-inject ai-assistant.css if missing
+        if (!document.querySelector('link[href*="ai-assistant.css"]')) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'ai-assistant.css';
+            document.head.appendChild(link);
+        }
+
+        // 2. Ensure Chart.js is available
+        if (!window.Chart && !document.querySelector('script[src*="chart.js"]')) {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+            document.head.appendChild(script);
+        }
+
         let drawer = document.getElementById('aiChatDrawer');
         let launcher = document.getElementById('aiChatLauncher') || document.querySelector('.floating-ai-trigger') || document.querySelector('.ai-chat-launcher');
         
@@ -260,6 +275,7 @@ const AIAssistant = {
             const drawerEl = document.createElement('div');
             drawerEl.className = 'ai-chat-drawer';
             drawerEl.id = 'aiChatDrawer';
+            drawerEl.style.display = 'none';
             drawerEl.innerHTML = `
                 <div class="ai-chat-header">
                     <div class="ai-drag-handle-bar" title="Drag to reposition window (Double-click to reset)">
