@@ -977,22 +977,196 @@ body.ai-dragging-active {
 /* ============================================================
    RESPONSIVE MOBILE ADJUSTMENTS
 ============================================================ */
+/* ============================================================
+   RESPONSIVE MOBILE ADJUSTMENTS & TOUCH OPTIMIZATIONS
+============================================================ */
 @media (max-width: 768px) {
     .ai-assistant-wrapper {
-        right: 14px;
-        bottom: 14px;
+        right: 16px;
+        bottom: 16px;
+        touch-action: none;
+    }
+
+    .floating-ai-trigger,
+    .ai-chat-launcher {
+        width: 60px;
+        height: 60px;
+        touch-action: none;
+    }
+
+    .floating-ai-trigger .ai-trigger-icon,
+    .ai-chat-launcher .ai-launcher-inner {
+        font-size: 20px;
+    }
+
+    .floating-ai-trigger .ai-trigger-text {
+        font-size: 8.5px;
     }
 
     .ai-chat-drawer {
         right: 8px;
-        bottom: 80px;
+        bottom: 12px;
         width: calc(100vw - 16px);
-        max-height: calc(100vh - 95px);
-        height: 540px;
-        border-radius: 18px;
+        max-width: calc(100vw - 16px);
+        max-height: calc(100vh - 80px);
+        height: min(600px, calc(100vh - 90px));
+        border-radius: 20px;
     }
 
     .ai-chat-drawer.expanded {
         width: calc(100vw - 16px);
+        max-height: calc(100vh - 60px);
+        height: min(680px, calc(100vh - 70px));
+    }
+
+    .ai-chat-header {
+        padding: 16px 14px 12px 14px;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .ai-header-brand {
+        gap: 8px;
+    }
+
+    .ai-bot-avatar {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        font-size: 15px;
+        border-radius: 10px;
+    }
+
+    .ai-title-row h3 {
+        font-size: 13.5px;
+    }
+
+    .ai-badge-live {
+        font-size: 9px;
+        padding: 1px 6px;
+    }
+
+    .ai-view-tabs {
+        padding: 2px;
+        gap: 2px;
+    }
+
+    .ai-tab-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+
+    .ai-tab-btn span {
+        display: inline;
+    }
+
+    .ai-header-tools {
+        gap: 4px;
+    }
+
+    .btn-ai-tool {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+        border-radius: 7px;
+    }
+
+    .ai-chat-messages {
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .chat-msg {
+        max-width: 95%;
+    }
+
+    .msg-text {
+        font-size: 13px;
+        padding: 10px 13px;
+    }
+
+    .ai-chat-input-bar {
+        padding: 10px 12px;
+        gap: 6px;
+    }
+
+    .ai-chat-input-bar input {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+
+    .btn-ai-mic,
+    .btn-ai-send {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+    }
+
+    #aiTabCharts {
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .chartbot-toolbar {
+        padding: 6px 10px;
+        gap: 6px;
+    }
+
+    .chartbot-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+    }
+
+    .metric-card {
+        padding: 8px 10px;
+    }
+
+    .metric-val {
+        font-size: 14px;
+    }
+
+    .chart-canvas-container {
+        height: 210px;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ai-assistant-wrapper {
+        right: 12px;
+        bottom: 12px;
+    }
+
+    .floating-ai-trigger,
+    .ai-chat-launcher {
+        width: 56px;
+        height: 56px;
+    }
+
+    .ai-chat-header {
+        padding: 14px 10px 10px 10px;
+    }
+
+    .ai-title-row h3 {
+        font-size: 12.5px;
+    }
+
+    .ai-header-info small {
+        display: none;
+    }
+
+    .ai-chat-drawer {
+        height: calc(100vh - 75px);
+        max-height: calc(100vh - 75px);
+        bottom: 8px;
+        left: 4px;
+        right: 4px;
+        width: calc(100vw - 8px);
+        max-width: calc(100vw - 8px);
+        border-radius: 16px;
+    }
+
+    .chartbot-metrics-grid {
+        grid-template-columns: 1fr 1fr;
     }
 }
