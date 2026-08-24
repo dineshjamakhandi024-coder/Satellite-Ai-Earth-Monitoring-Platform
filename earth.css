@@ -1521,7 +1521,10 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    cursor: pointer;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
     z-index: 90;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), var(--glow-cyan);
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1539,6 +1542,15 @@ body {
 }
 .ai-chat-launcher.active .ai-launcher-label {
     color: #020612;
+}
+
+.ai-chat-launcher.is-dragging {
+    cursor: grabbing !important;
+    transition: none !important;
+    transform: scale(1.08) !important;
+    box-shadow: 0 16px 50px rgba(0, 217, 255, 0.85), 0 0 35px rgba(6, 182, 212, 0.9) !important;
+    border-color: #00d9ff !important;
+    z-index: 100005 !important;
 }
 
 .ai-launcher-inner {
@@ -1583,9 +1595,9 @@ body {
     bottom: 90px;
     right: 28px;
     width: 400px;
-    max-width: calc(100vw - 40px);
+    max-width: calc(100vw - 20px);
     height: 580px;
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 110px);
     background: rgba(6, 14, 34, 0.96);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
@@ -1608,14 +1620,57 @@ body {
     pointer-events: auto;
 }
 
+.ai-chat-drawer.is-dragging {
+    transition: none !important;
+    border-color: rgba(0, 217, 255, 0.85) !important;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95), 0 0 50px rgba(0, 217, 255, 0.45) !important;
+    z-index: 100006 !important;
+}
+
 /* AI Header */
 .ai-chat-header {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 18px;
+    padding: 18px 18px 14px 18px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     background: rgba(0, 0, 0, 0.25);
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.ai-chat-header:active,
+.ai-chat-drawer.is-dragging .ai-chat-header {
+    cursor: grabbing;
+}
+
+.ai-drag-handle-bar {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 44px;
+    height: 5px;
+    background: rgba(0, 217, 255, 0.35);
+    border-radius: 6px;
+    cursor: grab;
+    transition: all 0.25s ease;
+}
+
+.ai-drag-handle-bar .drag-pill {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.ai-drag-handle-bar:hover,
+.ai-chat-drawer.is-dragging .ai-drag-handle-bar {
+    background: rgba(0, 217, 255, 0.9);
+    width: 60px;
+    box-shadow: 0 0 10px rgba(0, 217, 255, 0.8);
 }
 
 .ai-header-brand {

@@ -512,6 +512,9 @@
 
         <!-- HEADER -->
         <div class="ai-chat-header">
+            <div class="ai-drag-handle-bar" title="Drag to reposition window (Double-click header to reset)">
+                <span class="drag-pill"></span>
+            </div>
             <div class="ai-header-brand">
                 <div class="ai-bot-avatar">
                     <i class="fa-solid fa-satellite-dish"></i>
@@ -545,6 +548,9 @@
                 </button>
                 <button type="button" class="btn-ai-tool" id="aiVoiceToggleBtn" onclick="AIAssistant.toggleVoiceFeedback()" title="Toggle Voice Audio Feedback">
                     <i class="fa-solid fa-volume-high"></i>
+                </button>
+                <button type="button" class="btn-ai-tool" id="aiResetPosBtn" onclick="AIAssistant.resetPosition()" title="Reset Position to Default">
+                    <i class="fa-solid fa-arrows-rotate"></i>
                 </button>
                 <button type="button" class="btn-ai-tool" id="aiExpandBtn" onclick="AIAssistant.toggleExpand()" title="Toggle Expand View">
                     <i class="fa-solid fa-expand"></i>

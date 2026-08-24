@@ -314,6 +314,9 @@
     ============================================================ -->
     <section class="ai-chat-drawer" id="aiChatDrawer">
         <div class="ai-chat-header">
+            <div class="ai-drag-handle-bar" title="Drag to reposition window (Double-click header to reset)">
+                <span class="drag-pill"></span>
+            </div>
             <div class="ai-header-brand">
                 <div class="ai-bot-avatar">
                     <i class="fa-solid fa-satellite-dish"></i>
@@ -326,6 +329,9 @@
             <div class="ai-header-tools">
                 <button type="button" class="btn-ai-tool btn-ai-mic" onclick="AIAssistant.toggleVoiceRecognition()" title="Voice Command Mic">
                     <i class="fa-solid fa-microphone"></i>
+                </button>
+                <button type="button" class="btn-ai-tool" id="aiResetPosBtn" onclick="AIAssistant.resetPosition()" title="Reset Position to Default">
+                    <i class="fa-solid fa-arrows-rotate"></i>
                 </button>
                 <button type="button" class="btn-ai-tool close" onclick="toggleAIChat()" title="Close Assistant">
                     <i class="fa-solid fa-xmark"></i>

@@ -220,11 +220,644 @@ const AIAssistant = {
     },
 
     init() {
+        this.ensureDOMStructure();
         this.setupSpeechRecognition();
         this.setupVoices();
         this.renderQuickChips();
         this.bindEvents();
+        this.initDraggable();
         this.startLiveTelemetrySimulator();
+    },
+
+    ensureDOMStructure() {
+        let drawer = document.getElementById('aiChatDrawer');
+        let launcher = document.getElementById('aiChatLauncher') || document.querySelector('.floating-ai-trigger') || document.querySelector('.ai-chat-launcher');
+        
+        if (!drawer) {
+            let wrapper = document.querySelector('.ai-assistant-wrapper');
+            if (!wrapper) {
+                wrapper = document.createElement('div');
+                wrapper.className = 'ai-assistant-wrapper';
+                document.body.appendChild(wrapper);
+            }
+
+            if (!launcher) {
+                const btn = document.createElement('button');
+                btn.className = 'ai-button floating-ai-trigger';
+                btn.id = 'aiChatLauncher';
+                btn.onclick = () => this.open();
+                btn.title = 'Open Satellite AI & Chart Bot (Drag to move)';
+                btn.innerHTML = `
+                    <div class="ai-trigger-pulse"></div>
+                    <div class="ai-trigger-icon">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <span class="ai-trigger-text">AI & Charts</span>
+                `;
+                wrapper.appendChild(btn);
+            }
+
+            const drawerEl = document.createElement('div');
+            drawerEl.className = 'ai-chat-drawer';
+            drawerEl.id = 'aiChatDrawer';
+            drawerEl.innerHTML = `
+                <div class="ai-chat-header">
+                    <div class="ai-drag-handle-bar" title="Drag to reposition window (Double-click to reset)">
+                        <span class="drag-pill"></span>
+                    </div>
+                    <div class="ai-header-brand">
+                        <div class="ai-bot-avatar">
+                            <i class="fa-solid fa-satellite-dish"></i>
+                            <span class="avatar-status-dot"></span>
+                        </div>
+                        <div class="ai-header-info">
+                            <div class="ai-title-row">
+                                <h3>Satellite AI Assistant</h3>
+                                <span class="ai-badge-live"><i class="fa-solid fa-circle fa-beat"></i> Online</span>
+                            </div>
+                            <small id="aiVoiceStatus">Natural Language & Live Chart Bot</small>
+                        </div>
+                    </div>
+                    <div class="ai-view-tabs">
+                        <button type="button" class="ai-tab-btn active" id="tabBtnChat" onclick="AIAssistant.switchTab('chat')">
+                            <i class="fa-solid fa-comments"></i>
+                            <span>Chat</span>
+                        </button>
+                        <button type="button" class="ai-tab-btn" id="tabBtnCharts" onclick="AIAssistant.switchTab('charts')">
+                            <i class="fa-solid fa-chart-line"></i>
+                            <span>Chart Bot</span>
+                        </button>
+                    </div>
+                    <div class="ai-header-tools">
+                        <button type="button" class="btn-ai-tool btn-ai-mic" onclick="AIAssistant.toggleVoiceRecognition()" title="Voice Command Mic">
+                            <i class="fa-solid fa-microphone"></i>
+                        </button>
+                        <button type="button" class="btn-ai-tool" id="aiVoiceToggleBtn" onclick="AIAssistant.toggleVoiceFeedback()" title="Toggle Voice Audio Feedback">
+                            <i class="fa-solid fa-volume-high"></i>
+                        </button>
+                        <button type="button" class="btn-ai-tool" id="aiResetPosBtn" onclick="AIAssistant.resetPosition()" title="Reset Position to Default">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                        </button>
+                        <button type="button" class="btn-ai-tool" id="aiExpandBtn" onclick="AIAssistant.toggleExpand()" title="Toggle Expand View">
+                            <i class="fa-solid fa-expand"></i>
+                        </button>
+                        <button type="button" class="btn-ai-tool close" onclick="closeAI()" title="Close Assistant">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="ai-audio-waveform" id="aiAudioWaveform" style="display:none;">
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <div class="wave-bar"></div>
+                    <span>Listening for voice command...</span>
+                </div>
+                <div class="ai-tab-content active" id="aiTabChat">
+                    <div class="ai-chat-messages" id="aiChatMessages">
+                        <div class="chat-msg assistant">
+                            <div class="msg-avatar"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                            <div class="msg-bubble">
+                                <div class="msg-text">
+                                    ✨ Hello! I'm your <strong>Satellite AI Assistant & Chart Bot</strong>. 🛰️
+                                    <p style="margin:6px 0 6px 0;">I can generate interactive telemetry charts, answer satellite observation questions, or control this website:</p>
+                                    <div class="welcome-guide-grid">
+                                        <div class="guide-item" onclick="AIAssistant.handleQuickChip('📊 Show Forest Chart')">
+                                            <i class="fa-solid fa-tree"></i> <strong>Chart Bot</strong>: "Show forest chart" / "Plot urban growth"
+                                        </div>
+                                        <div class="guide-item" onclick="AIAssistant.handleQuickChip('🛰️ Track ISS Station')">
+                                            <i class="fa-solid fa-satellite"></i> <strong>Orbit Telemetry</strong>: "Track ISS" / "Sentinel-2 specs"
+                                        </div>
+                                        <div class="guide-item" onclick="AIAssistant.handleQuickChip('📍 Weather in Tokyo')">
+                                            <i class="fa-solid fa-cloud-sun"></i> <strong>Live Weather</strong>: "Weather in Tokyo / London / Paris"
+                                        </div>
+                                        <div class="guide-item" onclick="AIAssistant.handleQuickChip('🚀 Launch 3D Earth')">
+                                            <i class="fa-solid fa-globe"></i> <strong>Navigation</strong>: "Open 3D Earth" / "Open Reports"
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="msg-time">Ready</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ai-quick-chips-wrapper">
+                        <div class="ai-quick-chips" id="aiQuickChips"></div>
+                    </div>
+                    <form class="ai-chat-input-bar" id="aiChatForm">
+                        <button type="button" class="btn-ai-mic" onclick="AIAssistant.toggleVoiceRecognition()" title="Hold/Click to Speak">
+                            <i class="fa-solid fa-microphone"></i>
+                        </button>
+                        <input type="text" id="aiChatInput" placeholder="Ask AI or say 'Show forest chart', 'Plot urban growth'..." autocomplete="off">
+                        <button type="submit" class="btn-ai-send" title="Send Query">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                </div>
+                <div class="ai-tab-content" id="aiTabCharts">
+                    <div class="chartbot-modules-nav">
+                        <button type="button" class="module-tab-btn active" data-module="forest" onclick="AIAssistant.selectChartModule('forest')">
+                            <i class="fa-solid fa-tree"></i> Forest
+                        </button>
+                        <button type="button" class="module-tab-btn" data-module="urban" onclick="AIAssistant.selectChartModule('urban')">
+                            <i class="fa-solid fa-city"></i> Urban
+                        </button>
+                        <button type="button" class="module-tab-btn" data-module="flood" onclick="AIAssistant.selectChartModule('flood')">
+                            <i class="fa-solid fa-water"></i> Flood
+                        </button>
+                        <button type="button" class="module-tab-btn" data-module="climate" onclick="AIAssistant.selectChartModule('climate')">
+                            <i class="fa-solid fa-temperature-high"></i> Climate
+                        </button>
+                        <button type="button" class="module-tab-btn" data-module="fleet" onclick="AIAssistant.selectChartModule('fleet')">
+                            <i class="fa-solid fa-satellite"></i> Fleet
+                        </button>
+                        <button type="button" class="module-tab-btn" data-module="overview" onclick="AIAssistant.selectChartModule('overview')">
+                            <i class="fa-solid fa-chart-pie"></i> Overview
+                        </button>
+                    </div>
+                    <div class="chartbot-toolbar">
+                        <div class="chart-type-selector">
+                            <button type="button" class="chart-type-btn active" data-type="bar" onclick="AIAssistant.changeChartType('bar')" title="Bar Chart">
+                                <i class="fa-solid fa-chart-column"></i> Bar
+                            </button>
+                            <button type="button" class="chart-type-btn" data-type="line" onclick="AIAssistant.changeChartType('line')" title="Line Chart">
+                                <i class="fa-solid fa-chart-line"></i> Line
+                            </button>
+                            <button type="button" class="chart-type-btn" data-type="doughnut" onclick="AIAssistant.changeChartType('doughnut')" title="Donut Chart">
+                                <i class="fa-solid fa-chart-pie"></i> Donut
+                            </button>
+                            <button type="button" class="chart-type-btn" data-type="radar" onclick="AIAssistant.changeChartType('radar')" title="Radar Chart">
+                                <i class="fa-solid fa-circle-nodes"></i> Radar
+                            </button>
+                        </div>
+                        <div class="chart-actions">
+                            <button type="button" class="btn-live-stream active" id="btnLiveStream" onclick="AIAssistant.toggleLiveStream()" title="Toggle Live Telemetry Stream">
+                                <span class="live-dot-pulse"></span>
+                                <span id="liveStreamText">LIVE TELEMETRY</span>
+                            </button>
+                            <button type="button" class="btn-chart-action" onclick="AIAssistant.exportChartSnapshot()" title="Save Chart Image">
+                                <i class="fa-solid fa-camera"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chartbot-metrics-grid">
+                        <div class="metric-card">
+                            <span class="metric-lbl" id="metric1Label">Canopy Loss Index</span>
+                            <strong class="metric-val" id="metric1Value">-4.2%</strong>
+                            <small class="metric-trend positive" id="metric1Trend"><i class="fa-solid fa-arrow-trend-down"></i> Improving</small>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-lbl" id="metric2Label">AI Confidence</span>
+                            <strong class="metric-val" id="metric2Value">98.6%</strong>
+                            <small class="metric-trend" id="metric2Trend"><i class="fa-solid fa-shield-check"></i> High Precision</small>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-lbl" id="metric3Label">Monitored Extent</span>
+                            <strong class="metric-val" id="metric3Value">14,280 km²</strong>
+                            <small class="metric-trend" id="metric3Trend"><i class="fa-solid fa-vector-square"></i> Real-time</small>
+                        </div>
+                        <div class="metric-card">
+                            <span class="metric-lbl" id="metric4Label">Telemetry Sensors</span>
+                            <strong class="metric-val" id="metric4Value">Multispectral + SAR</strong>
+                            <small class="metric-trend" id="metric4Trend"><i class="fa-solid fa-tower-broadcast"></i> Synchronized</small>
+                        </div>
+                    </div>
+                    <div class="chart-canvas-container">
+                        <canvas id="aiChartCanvas"></canvas>
+                    </div>
+                    <div class="chartbot-insight-box">
+                        <div class="insight-header">
+                            <div class="insight-title">
+                                <i class="fa-solid fa-sparkles"></i>
+                                <strong id="chartInsightTitle">AI Forest Canopy Analysis & Anomaly Report</strong>
+                            </div>
+                            <button type="button" class="btn-ask-ai" onclick="AIAssistant.askAboutCurrentChart()">
+                                <i class="fa-solid fa-comments"></i> Ask AI
+                            </button>
+                        </div>
+                        <p id="chartInsightBody">
+                            Vegetation health index (NDVI) across primary target zones indicates stabilization. Afforestation projects gained +8,400 hectares this quarter while illegal deforestation alerts dropped by 12.4%.
+                        </p>
+                    </div>
+                </div>
+            `;
+            wrapper.appendChild(drawerEl);
+        } else {
+            // Drawer already in HTML: inject drag bar & reset button if absent
+            const header = drawer.querySelector('.ai-chat-header');
+            if (header) {
+                if (!header.querySelector('.ai-drag-handle-bar')) {
+                    const dragBar = document.createElement('div');
+                    dragBar.className = 'ai-drag-handle-bar';
+                    dragBar.title = 'Drag to reposition window (Double-click to reset)';
+                    dragBar.innerHTML = '<span class="drag-pill"></span>';
+                    header.insertBefore(dragBar, header.firstChild);
+                }
+                const tools = header.querySelector('.ai-header-tools');
+                if (tools && !tools.querySelector('#aiResetPosBtn')) {
+                    const resetBtn = document.createElement('button');
+                    resetBtn.type = 'button';
+                    resetBtn.className = 'btn-ai-tool';
+                    resetBtn.id = 'aiResetPosBtn';
+                    resetBtn.onclick = () => this.resetPosition();
+                    resetBtn.title = 'Reset Position to Default';
+                    resetBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i>';
+                    const closeBtn = tools.querySelector('.close');
+                    if (closeBtn) {
+                        tools.insertBefore(resetBtn, closeBtn);
+                    } else {
+                        tools.appendChild(resetBtn);
+                    }
+                }
+            }
+        }
+    },
+
+    initDraggable() {
+        const launcher = document.getElementById('aiChatLauncher') || document.querySelector('.floating-ai-trigger') || document.querySelector('.ai-chat-launcher');
+        const wrapper = document.querySelector('.ai-assistant-wrapper');
+        const drawer = document.getElementById('aiChatDrawer');
+
+        // Restore saved positions from localStorage
+        this.restorePositions();
+
+        // 1. DRAGGABLE FLOATING TRIGGER BUTTON (Mobile & Window)
+        if (launcher) {
+            let startX = 0, startY = 0;
+            let initialLeft = 0, initialTop = 0;
+            let isDragging = false;
+            let hasMoved = false;
+            const dragTarget = wrapper || launcher;
+
+            const onPointerDown = (e) => {
+                if (e.button !== undefined && e.button !== 0) return;
+
+                const clientX = e.clientX ?? (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+                const clientY = e.clientY ?? (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+                
+                startX = clientX;
+                startY = clientY;
+                
+                const rect = dragTarget.getBoundingClientRect();
+                initialLeft = rect.left;
+                initialTop = rect.top;
+                
+                isDragging = true;
+                hasMoved = false;
+
+                if (e.target && e.target.setPointerCapture && e.pointerId !== undefined) {
+                    try { e.target.setPointerCapture(e.pointerId); } catch (_) {}
+                }
+            };
+
+            const onPointerMove = (e) => {
+                if (!isDragging) return;
+
+                const clientX = e.clientX ?? (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+                const clientY = e.clientY ?? (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+                
+                const dx = clientX - startX;
+                const dy = clientY - startY;
+
+                if (!hasMoved && Math.hypot(dx, dy) > 5) {
+                    hasMoved = true;
+                    dragTarget.classList.add('is-dragging');
+                    launcher.classList.add('is-dragging');
+                    document.body.classList.add('ai-dragging-active');
+                }
+
+                if (hasMoved) {
+                    if (e.cancelable) e.preventDefault();
+                    let newLeft = initialLeft + dx;
+                    let newTop = initialTop + dy;
+
+                    const width = dragTarget.offsetWidth || 68;
+                    const height = dragTarget.offsetHeight || 68;
+
+                    // Clamping within viewport with safe margin
+                    const minLeft = 8;
+                    const maxLeft = Math.max(8, window.innerWidth - width - 8);
+                    const minTop = 8;
+                    const maxTop = Math.max(8, window.innerHeight - height - 8);
+
+                    newLeft = Math.max(minLeft, Math.min(maxLeft, newLeft));
+                    newTop = Math.max(minTop, Math.min(maxTop, newTop));
+
+                    dragTarget.style.left = newLeft + 'px';
+                    dragTarget.style.top = newTop + 'px';
+                    dragTarget.style.right = 'auto';
+                    dragTarget.style.bottom = 'auto';
+                    dragTarget.style.position = 'fixed';
+                }
+            };
+
+            const onPointerUp = (e) => {
+                if (!isDragging) return;
+                isDragging = false;
+                dragTarget.classList.remove('is-dragging');
+                launcher.classList.remove('is-dragging');
+                document.body.classList.remove('ai-dragging-active');
+
+                if (e.target && e.target.releasePointerCapture && e.pointerId !== undefined) {
+                    try { e.target.releasePointerCapture(e.pointerId); } catch (_) {}
+                }
+
+                if (hasMoved) {
+                    this.suppressClick = true;
+                    setTimeout(() => { this.suppressClick = false; }, 300);
+
+                    const rect = dragTarget.getBoundingClientRect();
+                    const pos = { left: rect.left, top: rect.top };
+                    try {
+                        localStorage.setItem('satellite_ai_launcher_pos', JSON.stringify(pos));
+                    } catch (_) {}
+
+                    this.adjustDrawerPositionToLauncher(pos);
+                }
+            };
+
+            launcher.addEventListener('pointerdown', onPointerDown, { passive: false });
+            window.addEventListener('pointermove', onPointerMove, { passive: false });
+            window.addEventListener('pointerup', onPointerUp);
+            window.addEventListener('pointercancel', onPointerUp);
+
+            launcher.addEventListener('touchstart', onPointerDown, { passive: true });
+            window.addEventListener('touchmove', onPointerMove, { passive: false });
+            window.addEventListener('touchend', onPointerUp);
+
+            launcher.addEventListener('click', (e) => {
+                if (this.suppressClick) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                }
+            }, true);
+        }
+
+        // 2. DRAGGABLE CHAT DRAWER WINDOW (Mobile & Window Header Drag)
+        if (drawer) {
+            const header = drawer.querySelector('.ai-chat-header');
+            const dragBar = drawer.querySelector('.ai-drag-handle-bar');
+            const handle = dragBar || header;
+
+            if (handle) {
+                let startX = 0, startY = 0;
+                let initialLeft = 0, initialTop = 0;
+                let isDraggingDrawer = false;
+                let hasMovedDrawer = false;
+
+                const onDrawerPointerDown = (e) => {
+                    if (e.target.closest('button, input, a, select, textarea, .ai-view-tabs, .ai-header-tools')) {
+                        return;
+                    }
+                    if (e.button !== undefined && e.button !== 0) return;
+
+                    const clientX = e.clientX ?? (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+                    const clientY = e.clientY ?? (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+
+                    startX = clientX;
+                    startY = clientY;
+
+                    const rect = drawer.getBoundingClientRect();
+                    initialLeft = rect.left;
+                    initialTop = rect.top;
+
+                    isDraggingDrawer = true;
+                    hasMovedDrawer = false;
+
+                    if (e.target && e.target.setPointerCapture && e.pointerId !== undefined) {
+                        try { e.target.setPointerCapture(e.pointerId); } catch (_) {}
+                    }
+                };
+
+                const onDrawerPointerMove = (e) => {
+                    if (!isDraggingDrawer) return;
+
+                    const clientX = e.clientX ?? (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+                    const clientY = e.clientY ?? (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+
+                    const dx = clientX - startX;
+                    const dy = clientY - startY;
+
+                    if (!hasMovedDrawer && Math.hypot(dx, dy) > 5) {
+                        hasMovedDrawer = true;
+                        drawer.classList.add('is-dragging');
+                        document.body.classList.add('ai-dragging-active');
+                    }
+
+                    if (hasMovedDrawer) {
+                        if (e.cancelable) e.preventDefault();
+                        let newLeft = initialLeft + dx;
+                        let newTop = initialTop + dy;
+
+                        const width = drawer.offsetWidth || 480;
+                        const height = drawer.offsetHeight || 600;
+
+                        const minLeft = 8;
+                        const maxLeft = Math.max(8, window.innerWidth - width - 8);
+                        const minTop = 8;
+                        const maxTop = Math.max(8, window.innerHeight - height - 8);
+
+                        newLeft = Math.max(minLeft, Math.min(maxLeft, newLeft));
+                        newTop = Math.max(minTop, Math.min(maxTop, newTop));
+
+                        drawer.style.left = newLeft + 'px';
+                        drawer.style.top = newTop + 'px';
+                        drawer.style.right = 'auto';
+                        drawer.style.bottom = 'auto';
+                        drawer.style.position = 'fixed';
+                    }
+                };
+
+                const onDrawerPointerUp = (e) => {
+                    if (!isDraggingDrawer) return;
+                    isDraggingDrawer = false;
+                    drawer.classList.remove('is-dragging');
+                    document.body.classList.remove('ai-dragging-active');
+
+                    if (e.target && e.target.releasePointerCapture && e.pointerId !== undefined) {
+                        try { e.target.releasePointerCapture(e.pointerId); } catch (_) {}
+                    }
+
+                    if (hasMovedDrawer) {
+                        const rect = drawer.getBoundingClientRect();
+                        const pos = { left: rect.left, top: rect.top };
+                        try {
+                            localStorage.setItem('satellite_ai_drawer_pos', JSON.stringify(pos));
+                        } catch (_) {}
+                    }
+                };
+
+                handle.addEventListener('pointerdown', onDrawerPointerDown, { passive: false });
+                window.addEventListener('pointermove', onDrawerPointerMove, { passive: false });
+                window.addEventListener('pointerup', onDrawerPointerUp);
+                window.addEventListener('pointercancel', onDrawerPointerUp);
+
+                handle.addEventListener('touchstart', onDrawerPointerDown, { passive: true });
+                window.addEventListener('touchmove', onDrawerPointerMove, { passive: false });
+                window.addEventListener('touchend', onDrawerPointerUp);
+
+                if (header) {
+                    header.addEventListener('dblclick', (e) => {
+                        if (!e.target.closest('button, input, a, select, textarea, .ai-view-tabs, .ai-header-tools')) {
+                            this.resetPosition();
+                        }
+                    });
+                }
+            }
+        }
+
+        // 3. RESPONSIVE RESIZE AUTO-CLAMP
+        window.addEventListener('resize', () => {
+            this.clampToViewport();
+        });
+    },
+
+    restorePositions() {
+        const launcher = document.getElementById('aiChatLauncher') || document.querySelector('.floating-ai-trigger') || document.querySelector('.ai-chat-launcher');
+        const wrapper = document.querySelector('.ai-assistant-wrapper');
+        const drawer = document.getElementById('aiChatDrawer');
+        const dragTarget = wrapper || launcher;
+
+        try {
+            const rawBtn = localStorage.getItem('satellite_ai_launcher_pos');
+            if (rawBtn && dragTarget) {
+                const pos = JSON.parse(rawBtn);
+                if (typeof pos.left === 'number' && typeof pos.top === 'number') {
+                    const width = dragTarget.offsetWidth || 68;
+                    const height = dragTarget.offsetHeight || 68;
+                    const left = Math.max(8, Math.min(window.innerWidth - width - 8, pos.left));
+                    const top = Math.max(8, Math.min(window.innerHeight - height - 8, pos.top));
+
+                    dragTarget.style.left = left + 'px';
+                    dragTarget.style.top = top + 'px';
+                    dragTarget.style.right = 'auto';
+                    dragTarget.style.bottom = 'auto';
+                    dragTarget.style.position = 'fixed';
+                }
+            }
+        } catch (_) {}
+
+        try {
+            const rawDrawer = localStorage.getItem('satellite_ai_drawer_pos');
+            if (rawDrawer && drawer) {
+                const pos = JSON.parse(rawDrawer);
+                if (typeof pos.left === 'number' && typeof pos.top === 'number') {
+                    const width = drawer.offsetWidth || 480;
+                    const height = drawer.offsetHeight || 600;
+                    const left = Math.max(8, Math.min(window.innerWidth - width - 8, pos.left));
+                    const top = Math.max(8, Math.min(window.innerHeight - height - 8, pos.top));
+
+                    drawer.style.left = left + 'px';
+                    drawer.style.top = top + 'px';
+                    drawer.style.right = 'auto';
+                    drawer.style.bottom = 'auto';
+                    drawer.style.position = 'fixed';
+                }
+            }
+        } catch (_) {}
+    },
+
+    adjustDrawerPositionToLauncher(launcherPos) {
+        const drawer = document.getElementById('aiChatDrawer');
+        const launcher = document.getElementById('aiChatLauncher') || document.querySelector('.floating-ai-trigger') || document.querySelector('.ai-chat-launcher');
+        if (!drawer || !launcher) return;
+
+        // If user already custom-dragged drawer, keep their custom placement
+        try {
+            if (localStorage.getItem('satellite_ai_drawer_pos')) return;
+        } catch (_) {}
+
+        const launcherWidth = launcher.offsetWidth || 68;
+        const launcherHeight = launcher.offsetHeight || 68;
+        const drawerWidth = Math.min(drawer.offsetWidth || 480, window.innerWidth - 16);
+        const drawerHeight = Math.min(drawer.offsetHeight || 620, window.innerHeight - 80);
+
+        let left = launcherPos.left;
+        let top = launcherPos.top - drawerHeight - 16;
+
+        if (launcherPos.left > window.innerWidth / 2) {
+            left = launcherPos.left + launcherWidth - drawerWidth;
+        }
+
+        if (top < 10) {
+            top = launcherPos.top + launcherHeight + 16;
+        }
+
+        left = Math.max(8, Math.min(window.innerWidth - drawerWidth - 8, left));
+        top = Math.max(8, Math.min(window.innerHeight - drawerHeight - 8, top));
+
+        drawer.style.left = left + 'px';
+        drawer.style.top = top + 'px';
+        drawer.style.right = 'auto';
+        drawer.style.bottom = 'auto';
+        drawer.style.position = 'fixed';
+    },
+
+    clampToViewport() {
+        const launcher = document.getElementById('aiChatLauncher') || document.querySelector('.floating-ai-trigger') || document.querySelector('.ai-chat-launcher');
+        const wrapper = document.querySelector('.ai-assistant-wrapper');
+        const drawer = document.getElementById('aiChatDrawer');
+        const dragTarget = wrapper || launcher;
+
+        if (dragTarget && dragTarget.style.left) {
+            const width = dragTarget.offsetWidth || 68;
+            const height = dragTarget.offsetHeight || 68;
+            const curLeft = parseInt(dragTarget.style.left, 10);
+            const curTop = parseInt(dragTarget.style.top, 10);
+
+            if (!isNaN(curLeft) && !isNaN(curTop)) {
+                const left = Math.max(8, Math.min(window.innerWidth - width - 8, curLeft));
+                const top = Math.max(8, Math.min(window.innerHeight - height - 8, curTop));
+                dragTarget.style.left = left + 'px';
+                dragTarget.style.top = top + 'px';
+            }
+        }
+
+        if (drawer && drawer.style.left) {
+            const width = drawer.offsetWidth || 480;
+            const height = drawer.offsetHeight || 600;
+            const curLeft = parseInt(drawer.style.left, 10);
+            const curTop = parseInt(drawer.style.top, 10);
+
+            if (!isNaN(curLeft) && !isNaN(curTop)) {
+                const left = Math.max(8, Math.min(window.innerWidth - width - 8, curLeft));
+                const top = Math.max(8, Math.min(window.innerHeight - height - 8, curTop));
+                drawer.style.left = left + 'px';
+                drawer.style.top = top + 'px';
+            }
+        }
+    },
+
+    resetPosition() {
+        try {
+            localStorage.removeItem('satellite_ai_launcher_pos');
+            localStorage.removeItem('satellite_ai_drawer_pos');
+        } catch (_) {}
+
+        const launcher = document.getElementById('aiChatLauncher') || document.querySelector('.floating-ai-trigger') || document.querySelector('.ai-chat-launcher');
+        const wrapper = document.querySelector('.ai-assistant-wrapper');
+        const drawer = document.getElementById('aiChatDrawer');
+
+        const targets = [wrapper, launcher, drawer].filter(Boolean);
+        targets.forEach(el => {
+            el.style.left = '';
+            el.style.top = '';
+            el.style.right = '';
+            el.style.bottom = '';
+            el.style.position = '';
+            el.classList.remove('is-dragging');
+        });
+
+        const resetBtn = document.getElementById('aiResetPosBtn');
+        if (resetBtn) {
+            resetBtn.style.transition = 'transform 0.4s ease';
+            resetBtn.style.transform = 'rotate(360deg)';
+            setTimeout(() => { 
+                resetBtn.style.transform = ''; 
+                setTimeout(() => { resetBtn.style.transition = ''; }, 200);
+            }, 400);
+        }
     },
 
     setupVoices() {
@@ -403,6 +1036,16 @@ const AIAssistant = {
             panel.classList.add('active');
             panel.classList.add('show');
             panel.style.display = 'flex';
+
+            try {
+                const rawBtn = localStorage.getItem('satellite_ai_launcher_pos');
+                const rawDrawer = localStorage.getItem('satellite_ai_drawer_pos');
+                if (rawBtn && !rawDrawer) {
+                    this.adjustDrawerPositionToLauncher(JSON.parse(rawBtn));
+                }
+            } catch (_) {}
+
+            this.clampToViewport();
         }
         if (launcher) launcher.classList.add('active');
 
